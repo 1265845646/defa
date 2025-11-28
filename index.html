@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Busan Data Wave</title>
+    
+    <!-- Fonts: Jua (Display) and Quicksand (Rounded Body) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Jua&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              mint: '#B2EBF2',
+              'soft-yellow': '#FFFACD',
+              'baby-blue': '#A1C9F4',
+              'deep-navy': '#191970',
+              'paper-white': '#FAFAFA',
+            },
+            fontFamily: {
+              sans: ['Quicksand', 'sans-serif'],
+              display: ['Jua', 'sans-serif'],
+            },
+            boxShadow: {
+              'soft': '0 10px 40px -10px rgba(178, 235, 242, 0.5)',
+              'pop': '4px 4px 0px 0px rgba(25, 25, 112, 0.1)',
+              'pop-hover': '6px 6px 0px 0px rgba(25, 25, 112, 0.15)',
+            },
+            animation: {
+              'float': 'float 3s ease-in-out infinite',
+              'wave-slow': 'wave 8s linear infinite',
+              'wave-medium': 'wave 6s linear infinite',
+              'wave-fast': 'wave 4s linear infinite',
+              'train-move': 'trainMove 20s linear infinite',
+              'cloud-move': 'cloudMove 60s linear infinite',
+            },
+            keyframes: {
+              float: {
+                '0%, 100%': { transform: 'translateY(0)' },
+                '50%': { transform: 'translateY(-10px)' },
+              },
+              wave: {
+                '0%': { transform: 'translateX(0)' },
+                '100%': { transform: 'translateX(-50%)' },
+              },
+              trainMove: {
+                '0%': { transform: 'translateX(-120%)' },
+                '100%': { transform: 'translateX(120vw)' },
+              },
+              cloudMove: {
+                '0%': { transform: 'translateX(0)' },
+                '100%': { transform: 'translateX(-100%)' },
+              }
+            }
+          },
+        },
+      }
+    </script>
+    <style>
+      body {
+        background-color: #FAFAFA;
+        color: #191970;
+        overflow-x: hidden;
+      }
+      /* Custom scrollbar for webkit */
+      ::-webkit-scrollbar {
+        width: 10px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #FFFACD;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #B2EBF2;
+        border-radius: 5px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #A1C9F4;
+      }
+
+      /* Utility class to hide scrollbar but allow scrolling */
+      .scrollbar-hide::-webkit-scrollbar {
+          display: none;
+      }
+      .scrollbar-hide {
+          -ms-overflow-style: none;  /* IE and Edge */
+          scrollbar-width: none;  /* Firefox */
+      }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "lucide-react": "https://aistudiocdn.com/lucide-react@^0.555.0",
+    "react/": "https://aistudiocdn.com/react@^19.2.0/",
+    "react": "https://aistudiocdn.com/react@^19.2.0",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/"
+  }
+}
+</script>
+<link rel="stylesheet" href="/index.css">
+</head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="./index.tsx"></script>
+  <script type="module" src="/index.tsx"></script>
+</body>
+</html>
