@@ -92,14 +92,14 @@ const Footer = ({ onNavigate }: any) => (
       <div className="grid md:grid-cols-4 gap-12 mb-12">
         <div className="col-span-1 md:col-span-1">
           <div className="mb-4 cursor-pointer" onClick={() => onNavigate('index.html')}>
-             <span className="font-display text-xl font-bold text-deep-navy">DEFA</span>
+            <span className="font-display text-xl font-bold text-deep-navy">DEFA</span>
           </div>
           <p className="text-gray-500 text-sm leading-relaxed">
-            데이터(Data)를 찾아주는(Finder) 대파(DEFA).<br/>
+            데이터(Data)를 찾아주는(Finder) 대파(DEFA).<br />
             누구나 쉽게 공공데이터를 활용해 문서를 만듭니다.
           </p>
         </div>
-        
+
         <div>
           <h4 className="font-bold text-deep-navy mb-4">Service</h4>
           <ul className="space-y-2 text-gray-500 text-sm">
@@ -124,7 +124,7 @@ const Footer = ({ onNavigate }: any) => (
           </ul>
         </div>
       </div>
-      
+
       <div className="border-t border-gray-100 pt-8 flex flex-col md:flex-row justify-between items-center text-xs text-gray-400">
         <p>&copy; 2024 DEFA Project. All rights reserved.</p>
       </div>
@@ -156,7 +156,7 @@ const MainPage = ({ onNavigate }: { onNavigate: (path: string) => void }) => {
     <>
       <section className="relative pt-32 pb-20 md:pt-48 md:pb-32 overflow-hidden min-h-[90vh] flex items-center">
         <BusanAnimation />
-        
+
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div className="space-y-8 text-center md:text-left">
@@ -165,14 +165,14 @@ const MainPage = ({ onNavigate }: { onNavigate: (path: string) => void }) => {
                   아이디어만 있으면 데이터는 데파가 찾아요!
                 </span>
               </div>
-              
+
               <h1 className="font-display text-5xl md:text-7xl leading-tight text-deep-navy drop-shadow-sm">
                 문서 작성의 시작,<br />
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-baby-blue to-mint relative">
-                   데이터파인더 DEFA
+                  데이터파인더 DEFA
                 </span>
               </h1>
-              
+
               <p className="text-xl md:text-2xl text-deep-navy/70 leading-relaxed font-medium">
                 "이 데이터 어디서 찾지?" 고민하지 마세요.<br />
                 DEFA가 찾아주고, 문서 초안까지 써드립니다.
@@ -183,15 +183,15 @@ const MainPage = ({ onNavigate }: { onNavigate: (path: string) => void }) => {
                   onClick={() => onNavigate('chatbot.html')}
                   className="group bg-deep-navy text-white px-8 py-4 rounded-full font-bold text-xl shadow-pop hover:shadow-pop-hover hover:-translate-y-1 transition-all flex items-center justify-center gap-2"
                 >
-                   데파 시작하기
-                   <ArrowRight className="group-hover:translate-x-1 transition-transform" />
+                  데파 시작하기
+                  <ArrowRight className="group-hover:translate-x-1 transition-transform" />
                 </button>
               </div>
 
               {/* Search Input */}
               <div className="mt-8 bg-white p-2 rounded-full shadow-soft border border-mint/50 max-w-md mx-auto md:mx-0 flex items-center transform rotate-1 hover:rotate-0 transition-transform duration-300">
                 <div className="w-10 h-10 bg-mint rounded-full flex items-center justify-center ml-1">
-                    <Search className="text-deep-navy w-5 h-5" />
+                  <Search className="text-deep-navy w-5 h-5" />
                 </div>
                 <input
                   type="text"
@@ -205,11 +205,11 @@ const MainPage = ({ onNavigate }: { onNavigate: (path: string) => void }) => {
                   onClick={handleSearch}
                   className="bg-deep-navy text-white px-4 py-2 rounded-full text-sm font-bold hover:bg-baby-blue hover:text-deep-navy transition-colors"
                 >
-                    검색
+                  검색
                 </button>
               </div>
             </div>
-            
+
             <div className="hidden md:block h-full min-h-[400px]"></div>
           </div>
         </div>
@@ -233,42 +233,42 @@ const MainPage = ({ onNavigate }: { onNavigate: (path: string) => void }) => {
       <section id="how-it-works" className="py-24 bg-paper-white relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-20 space-y-4">
-             <span className="text-mint font-display text-xl tracking-wider uppercase">Process</span>
-             <h2 className="font-display text-4xl md:text-5xl text-deep-navy">
-               데이터 탐색부터 문서 완성까지,<br/> 
-               <span className="relative inline-block mt-2">
-                 DEFA가 다 해요!
-                 <span className="absolute bottom-1 left-0 w-full h-3 bg-soft-yellow/60 -z-10 rounded-sm"></span>
-               </span>
-             </h2>
+            <span className="text-mint font-display text-xl tracking-wider uppercase">Process</span>
+            <h2 className="font-display text-4xl md:text-5xl text-deep-navy">
+              데이터 탐색부터 문서 완성까지,<br />
+              <span className="relative inline-block mt-2">
+                DEFA가 다 해요!
+                <span className="absolute bottom-1 left-0 w-full h-3 bg-soft-yellow/60 -z-10 rounded-sm"></span>
+              </span>
+            </h2>
           </div>
 
           <div className="grid md:grid-cols-3 gap-12 relative">
-             <div className="hidden md:block absolute top-16 left-0 w-full h-1 z-0">
-                <svg className="w-full h-20" preserveAspectRatio="none">
-                  <path d="M100 10 Q 300 50 500 10 T 900 10" fill="none" stroke="#B2EBF2" strokeWidth="4" strokeDasharray="10,10" />
-                </svg>
-             </div>
+            <div className="hidden md:block absolute top-16 left-0 w-full h-1 z-0">
+              <svg className="w-full h-20" preserveAspectRatio="none">
+                <path d="M100 10 Q 300 50 500 10 T 900 10" fill="none" stroke="#B2EBF2" strokeWidth="4" strokeDasharray="10,10" />
+              </svg>
+            </div>
 
-             {HOW_IT_WORKS_STEPS.map((step, index) => (
-               <div key={step.id} className="relative z-10 flex flex-col items-center text-center group">
-                 <div className="w-32 h-32 bg-white rounded-3xl border-4 border-mint shadow-soft flex items-center justify-center mb-8 transform group-hover:scale-105 group-hover:rotate-3 transition-all duration-300">
-                   <step.icon size={48} className="text-baby-blue" />
-                   <div className="absolute -top-4 -right-4 bg-deep-navy text-white px-4 py-1 rounded-full font-bold text-sm shadow-md">
-                     {step.badge}
-                   </div>
-                 </div>
-                 <h3 className="text-2xl font-bold text-deep-navy mb-4">{step.title}</h3>
-                 <p className="text-lg text-gray-600 whitespace-pre-line leading-relaxed">
-                   {step.description}
-                 </p>
-               </div>
-             ))}
+            {HOW_IT_WORKS_STEPS.map((step, index) => (
+              <div key={step.id} className="relative z-10 flex flex-col items-center text-center group">
+                <div className="w-32 h-32 bg-white rounded-3xl border-4 border-mint shadow-soft flex items-center justify-center mb-8 transform group-hover:scale-105 group-hover:rotate-3 transition-all duration-300">
+                  <step.icon size={48} className="text-baby-blue" />
+                  <div className="absolute -top-4 -right-4 bg-deep-navy text-white px-4 py-1 rounded-full font-bold text-sm shadow-md">
+                    {step.badge}
+                  </div>
+                </div>
+                <h3 className="text-2xl font-bold text-deep-navy mb-4">{step.title}</h3>
+                <p className="text-lg text-gray-600 whitespace-pre-line leading-relaxed">
+                  {step.description}
+                </p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
-      <section id="features" className="py-24 bg-mint/10 relative overflow-hidden">
+      <section id="solutions" className="py-24 bg-mint/10 relative overflow-hidden">
         <div className="absolute top-0 right-0 w-64 h-64 bg-mint/20 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
         <div className="absolute bottom-0 left-0 w-96 h-96 bg-soft-yellow/20 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2"></div>
 
@@ -289,8 +289,8 @@ const MainPage = ({ onNavigate }: { onNavigate: (path: string) => void }) => {
                   key={item.id}
                   onClick={() => setActiveTab(item.id)}
                   className={`flex items-center p-4 rounded-2xl border-2 transition-all w-full min-w-[260px] text-left group
-                    ${activeTab === item.id 
-                      ? 'bg-white border-deep-navy shadow-pop scale-100 lg:translate-x-4' 
+                    ${activeTab === item.id
+                      ? 'bg-white border-deep-navy shadow-pop scale-100 lg:translate-x-4'
                       : 'bg-white/50 border-transparent hover:bg-white hover:border-mint'
                     }`}
                 >
@@ -311,51 +311,50 @@ const MainPage = ({ onNavigate }: { onNavigate: (path: string) => void }) => {
 
             <div className="lg:w-2/3">
               {DOCUMENT_CATEGORIES.map((item) => (
-                <div 
+                <div
                   key={item.id}
-                  className={`bg-white rounded-[2.5rem] p-8 md:p-12 border-4 border-deep-navy/5 shadow-soft h-full transition-all duration-500 transform ${
-                    activeTab === item.id ? 'opacity-100 translate-y-0 relative' : 'opacity-0 translate-y-8 absolute top-0 left-0 pointer-events-none'
-                  }`}
+                  className={`bg-white rounded-[2.5rem] p-8 md:p-12 border-4 border-deep-navy/5 shadow-soft h-full transition-all duration-500 transform ${activeTab === item.id ? 'opacity-100 translate-y-0 relative' : 'opacity-0 translate-y-8 absolute top-0 left-0 pointer-events-none'
+                    }`}
                 >
-                   <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-8">
-                      <div className={`inline-block px-4 py-2 rounded-full ${item.color} text-deep-navy font-bold mb-4 md:mb-0`}>
-                        {item.role} 추천 문서
-                      </div>
-                      <div className="flex items-center text-gray-400 text-sm font-medium">
-                        <CheckCircle2 size={16} className="mr-2 text-mint" />
-                        자동 데이터 매칭 지원
-                      </div>
-                   </div>
+                  <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-8">
+                    <div className={`inline-block px-4 py-2 rounded-full ${item.color} text-deep-navy font-bold mb-4 md:mb-0`}>
+                      {item.role} 추천 문서
+                    </div>
+                    <div className="flex items-center text-gray-400 text-sm font-medium">
+                      <CheckCircle2 size={16} className="mr-2 text-mint" />
+                      자동 데이터 매칭 지원
+                    </div>
+                  </div>
 
-                   <h3 className="font-display text-2xl md:text-3xl text-deep-navy mb-6">
-                     생성 가능한 문서 목록
-                   </h3>
+                  <h3 className="font-display text-2xl md:text-3xl text-deep-navy mb-6">
+                    생성 가능한 문서 목록
+                  </h3>
 
-                   <div className="grid md:grid-cols-2 gap-4 mb-8">
-                     {item.docs.map((doc, idx) => (
-                       <button
-                         key={idx}
-                         onClick={() => onNavigate(`create_doc.html?cat=${item.id}&doc=${encodeURIComponent(doc.name)}`)}
-                         className="flex items-center p-3 rounded-xl border border-gray-100 hover:border-mint hover:bg-mint/5 transition-all text-left group/doc"
-                       >
-                         <div className="bg-white p-2 rounded-lg border border-gray-100 shadow-sm mr-3">
-                           <FileText size={18} className="text-baby-blue" />
-                         </div>
-                         <div>
-                           <div className="font-bold text-deep-navy text-sm group-hover/doc:text-mint transition-colors">{doc.name}</div>
-                         </div>
-                       </button>
-                     ))}
-                   </div>
+                  <div className="grid md:grid-cols-2 gap-4 mb-8">
+                    {item.docs.map((doc, idx) => (
+                      <button
+                        key={idx}
+                        onClick={() => onNavigate(`create_doc.html?cat=${item.id}&doc=${encodeURIComponent(doc.name)}`)}
+                        className="flex items-center p-3 rounded-xl border border-gray-100 hover:border-mint hover:bg-mint/5 transition-all text-left group/doc"
+                      >
+                        <div className="bg-white p-2 rounded-lg border border-gray-100 shadow-sm mr-3">
+                          <FileText size={18} className="text-baby-blue" />
+                        </div>
+                        <div>
+                          <div className="font-bold text-deep-navy text-sm group-hover/doc:text-mint transition-colors">{doc.name}</div>
+                        </div>
+                      </button>
+                    ))}
+                  </div>
 
-                   <div className="flex justify-end">
-                     <button 
-                       onClick={() => onNavigate('documents.html')}
-                       className="bg-deep-navy text-white px-6 py-3 rounded-full font-bold text-lg flex items-center shadow-pop hover:shadow-pop-hover hover:-translate-y-1 transition-all"
-                     >
-                       전체 문서 목록 보기 <ArrowRight size={20} className="ml-2" />
-                     </button>
-                   </div>
+                  <div className="flex justify-end">
+                    <button
+                      onClick={() => onNavigate('documents.html')}
+                      className="bg-deep-navy text-white px-6 py-3 rounded-full font-bold text-lg flex items-center shadow-pop hover:shadow-pop-hover hover:-translate-y-1 transition-all"
+                    >
+                      전체 문서 목록 보기 <ArrowRight size={20} className="ml-2" />
+                    </button>
+                  </div>
                 </div>
               ))}
             </div>
@@ -365,15 +364,15 @@ const MainPage = ({ onNavigate }: { onNavigate: (path: string) => void }) => {
 
       <section className="py-24 bg-deep-navy relative overflow-hidden">
         <div className="absolute inset-0 opacity-10">
-            <svg className="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
-               <path d="M0 100 Q 50 0 100 100" fill="white" />
-            </svg>
+          <svg className="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
+            <path d="M0 100 Q 50 0 100 100" fill="white" />
+          </svg>
         </div>
-        
+
         <div className="max-w-4xl mx-auto px-4 text-center relative z-10">
           <h2 className="font-display text-4xl md:text-6xl text-white mb-8">
-             준비되셨나요?<br/>
-             <span className="text-mint">데파</span>와 함께 문서를 완성하세요!
+            준비되셨나요?<br />
+            <span className="text-mint">데파</span>와 함께 문서를 완성하세요!
           </h2>
           <button
             onClick={() => onNavigate('chatbot.html')}
@@ -428,11 +427,10 @@ const ChatbotPage = ({ onNavigate }: { onNavigate: (path: string) => void }) => 
     }
   }, []);
 
-  const handleSend = async (customInput?: string) => {
-    const messageText = customInput || input;
-    if (!messageText.trim()) return;
+  const handleSend = async () => {
+    if (!input.trim()) return;
 
-    const userMsg = messageText;
+    const userMsg = input;
     setMessages(prev => [...prev, { type: 'user', text: userMsg }]);
     setInput('');
     setIsTyping(true);
@@ -668,44 +666,43 @@ const ChatbotPage = ({ onNavigate }: { onNavigate: (path: string) => void }) => 
 
             {messages.map((msg, idx) => (
               <div key={idx} className={`flex items-start ${msg.type === 'user' ? 'justify-end' : ''} max-w-[90%] ${msg.type === 'user' ? 'ml-auto' : ''}`}>
-                 {msg.type === 'bot' && (
-                   <LeekIcon className="h-10 w-auto flex-shrink-0 mr-3 mt-1" />
-                 )}
-                 <div className={`p-5 rounded-2xl shadow-sm border ${
-                   msg.type === 'user'
-                     ? 'bg-deep-navy text-white rounded-tr-none border-deep-navy shadow-pop'
-                     : 'bg-white text-deep-navy rounded-tl-none border-gray-100'
-                 } leading-relaxed whitespace-pre-line`}>
-                   {msg.text}
-                 </div>
+                {msg.type === 'bot' && (
+                  <LeekIcon className="h-10 w-auto flex-shrink-0 mr-3 mt-1" />
+                )}
+                <div className={`p-5 rounded-2xl shadow-sm border ${msg.type === 'user'
+                    ? 'bg-deep-navy text-white rounded-tr-none border-deep-navy shadow-pop'
+                    : 'bg-white text-deep-navy rounded-tl-none border-gray-100'
+                  } leading-relaxed whitespace-pre-line`}>
+                  {msg.text}
+                </div>
               </div>
             ))}
 
-             {/* Bot Typing Simulation */}
-             {isTyping && (
-               <div className="flex items-start max-w-[80%]">
-                 <LeekIcon className="h-10 w-auto flex-shrink-0 mr-3 mt-1" />
-                 <div className="bg-white p-4 rounded-2xl rounded-tl-none shadow-sm border border-gray-100 flex items-center gap-2">
-                   <span className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></span>
-                   <span className="w-2 h-2 bg-gray-400 rounded-full animate-bounce delay-100"></span>
-                   <span className="w-2 h-2 bg-gray-400 rounded-full animate-bounce delay-200"></span>
-                 </div>
+            {/* Bot Typing Simulation */}
+            {isTyping && (
+              <div className="flex items-start max-w-[80%]">
+                <LeekIcon className="h-10 w-auto flex-shrink-0 mr-3 mt-1" />
+                <div className="bg-white p-4 rounded-2xl rounded-tl-none shadow-sm border border-gray-100 flex items-center gap-2">
+                  <span className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></span>
+                  <span className="w-2 h-2 bg-gray-400 rounded-full animate-bounce delay-100"></span>
+                  <span className="w-2 h-2 bg-gray-400 rounded-full animate-bounce delay-200"></span>
+                </div>
               </div>
-             )}
+            )}
 
-             {showProceedBtn && (
-               <div className="flex justify-center mt-6 animate-float">
-                 <button
-                   onClick={() => onNavigate('documents.html')}
-                   className="bg-soft-yellow text-deep-navy px-8 py-4 rounded-full font-bold text-lg border-2 border-deep-navy shadow-pop hover:shadow-pop-hover hover:-translate-y-1 transition-all flex items-center gap-2"
-                 >
-                   문서 포맷 선택하기
-                   <ArrowRight size={20} />
-                 </button>
-               </div>
-             )}
+            {showProceedBtn && (
+              <div className="flex justify-center mt-6 animate-float">
+                <button
+                  onClick={() => onNavigate('documents.html')}
+                  className="bg-soft-yellow text-deep-navy px-8 py-4 rounded-full font-bold text-lg border-2 border-deep-navy shadow-pop hover:shadow-pop-hover hover:-translate-y-1 transition-all flex items-center gap-2"
+                >
+                  문서 포맷 선택하기
+                  <ArrowRight size={20} />
+                </button>
+              </div>
+            )}
 
-             <div ref={messagesEndRef} />
+            <div ref={messagesEndRef} />
           </div>
 
           {/* Input Area */}
@@ -761,26 +758,23 @@ const ChatbotPage = ({ onNavigate }: { onNavigate: (path: string) => void }) => 
                 <div
                   key={idx}
                   onClick={() => toggleDatasetCheck(idx)}
-                  className={`w-full text-left bg-white rounded-2xl p-4 border-2 cursor-pointer transition-all group ${
-                    dataset.checked
+                  className={`w-full text-left bg-white rounded-2xl p-4 border-2 cursor-pointer transition-all group ${dataset.checked
                       ? 'border-mint bg-mint/5 shadow-md'
                       : 'border-gray-100 hover:border-mint hover:shadow-md'
-                  }`}
+                    }`}
                 >
                   <div className="flex items-start gap-3">
                     {/* 체크박스 */}
-                    <div className={`flex-shrink-0 w-5 h-5 rounded border-2 flex items-center justify-center transition-all mt-0.5 ${
-                      dataset.checked
+                    <div className={`flex-shrink-0 w-5 h-5 rounded border-2 flex items-center justify-center transition-all mt-0.5 ${dataset.checked
                         ? 'bg-mint border-mint'
                         : 'border-gray-300 group-hover:border-mint'
-                    }`}>
+                      }`}>
                       {dataset.checked && <Check size={14} className="text-white" strokeWidth={3} />}
                     </div>
 
                     <div className="flex-1 min-w-0">
-                      <h4 className={`font-bold text-sm mb-2 transition-colors line-clamp-2 ${
-                        dataset.checked ? 'text-mint' : 'text-deep-navy group-hover:text-mint'
-                      }`}>
+                      <h4 className={`font-bold text-sm mb-2 transition-colors line-clamp-2 ${dataset.checked ? 'text-mint' : 'text-deep-navy group-hover:text-mint'
+                        }`}>
                         {dataset.serviceName}
                       </h4>
                       <p className="text-xs text-gray-600 leading-relaxed line-clamp-3 mb-3">
@@ -839,7 +833,7 @@ const DocumentListPage = ({ onNavigate }: { onNavigate: (path: string) => void }
     <div className="min-h-screen pt-28 pb-10 relative bg-paper-white">
       {/* Top Banner Background */}
       <div className="absolute top-0 w-full h-64 overflow-hidden pointer-events-none">
-          <BusanAnimation />
+        <BusanAnimation />
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
@@ -857,11 +851,10 @@ const DocumentListPage = ({ onNavigate }: { onNavigate: (path: string) => void }
                 <button
                   key={cat.id}
                   onClick={() => setSelectedCategory(cat.id)}
-                  className={`w-full flex items-center p-3 rounded-xl transition-all mb-2 ${
-                    selectedCategory === cat.id 
-                      ? `${cat.color} text-deep-navy shadow-sm font-bold` 
+                  className={`w-full flex items-center p-3 rounded-xl transition-all mb-2 ${selectedCategory === cat.id
+                      ? `${cat.color} text-deep-navy shadow-sm font-bold`
                       : 'hover:bg-gray-50 text-gray-500'
-                  }`}
+                    }`}
                 >
                   <cat.icon size={20} className="mr-3" />
                   {cat.label}
@@ -878,21 +871,21 @@ const DocumentListPage = ({ onNavigate }: { onNavigate: (path: string) => void }
                   {activeDocs && <activeDocs.icon size={32} className="text-deep-navy" />}
                 </div>
                 <div>
-                   <h2 className="font-display text-2xl text-deep-navy">{activeDocs?.label}</h2>
-                   <p className="text-gray-500 text-sm">{activeDocs?.description}</p>
+                  <h2 className="font-display text-2xl text-deep-navy">{activeDocs?.label}</h2>
+                  <p className="text-gray-500 text-sm">{activeDocs?.description}</p>
                 </div>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {activeDocs?.docs.map((doc, idx) => (
-                  <button 
+                  <button
                     key={idx}
                     onClick={() => onNavigate(`create_doc.html?cat=${activeDocs.id}&doc=${encodeURIComponent(doc.name)}`)}
                     className="flex flex-col text-left p-6 rounded-2xl border-2 border-gray-100 hover:border-mint hover:bg-mint/5 hover:-translate-y-1 transition-all group"
                   >
                     <div className="flex justify-between items-start mb-3">
                       <div className="bg-white border border-gray-200 p-2 rounded-lg shadow-sm">
-                         <FileText size={20} className="text-baby-blue" />
+                        <FileText size={20} className="text-baby-blue" />
                       </div>
                       <ChevronRight className="text-gray-300 group-hover:text-mint transition-colors" />
                     </div>
@@ -935,85 +928,100 @@ const CreateDocPage = ({ targetId, docName, onNavigate, onGenerateSuccess }: { t
 
   const handleGenerate = async () => {
     if (!topic.trim()) {
-        alert("문서 주제를 입력해주세요.");
-        return;
+      alert("문서 주제를 입력해주세요.");
+      return;
     }
 
     if (selectedDatasets.length === 0) {
-        alert("최소 1개 이상의 데이터셋을 선택해주세요. 챗봇으로 돌아가서 데이터셋을 선택해주세요.");
-        return;
+      alert("최소 1개 이상의 데이터셋을 선택해주세요. 챗봇으로 돌아가서 데이터셋을 선택해주세요.");
+      return;
     }
 
     setIsGenerating(true);
 
     try {
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), API_TIMEOUT);
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), API_TIMEOUT);
 
-        const response = await fetch(WEBHOOK_URL, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                data: {
-                    topic: topic,
-                    goal: goal,
-                    tone: tone,
-                    docType: docName || category.docType,
-                    userType: category.label,
-                    selectedDatasets: selectedDatasets, // 선택된 데이터셋 포함
-                    timestamp: new Date().toISOString()
-                }
-            }),
-            signal: controller.signal
-        });
+      const response = await fetch(WEBHOOK_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          data: {
+            topic,
+            goal,
+            tone,
+            docType: docName || category.docType,
+            userType: category.label,
+            selectedDatasets,
+            timestamp: new Date().toISOString()
+          }
+        }),
+        signal: controller.signal
+      });
 
-        clearTimeout(timeoutId);
+      clearTimeout(timeoutId);
 
-        if (!response.ok) {
-            const errorData = await response.json().catch(() => ({}));
-            throw new Error(errorData.message || `Server error: ${response.status}`);
-        }
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.message || `Server error: ${response.status}`);
+      }
 
-        const data: GeneratedDocData = await response.json();
+      // === JSON 응답 파싱 ===
+      const raw = await response.json();
+      console.log("n8n raw response:", raw);
 
-        // Validate response structure
-        if (!data.title || !data.sections || !Array.isArray(data.sections)) {
-            throw new Error('Invalid response format from server');
-        }
+      let parsed: GeneratedDocData;
 
-        // Pass the generated data to the parent (App) so ResultPage can use it
-        onGenerateSuccess(data);
-        onNavigate('result_doc.html');
+      // 🔥 1) n8n이 배열 형태로 sections만 주는 경우
+      if (Array.isArray(raw)) {
+        parsed = {
+          title: `${topic} 초안`,
+          sections: raw.map((sec) => ({
+            heading: sec.heading,
+            content: [
+              ...(sec.bullets || []),
+              ...(sec.paragraphs || [])
+            ].join('\n')
+          }))
+        };
+      }
+      // 🔥 2) GPT처럼 {title, sections[]} 줬을 때 그대로 사용
+      else if (raw.title && raw.sections) {
+        parsed = raw;
+      }
+      // 🔥 3) fallback — 최소 구조 만들기
+      else {
+        parsed = {
+          title: topic,
+          sections: [{
+            heading: "본문",
+            content: JSON.stringify(raw, null, 2)
+          }]
+        };
+      }
+
+      // === ResultPage 로 전달 ===
+      onGenerateSuccess(parsed);
+      onNavigate('result_doc.html');
 
     } catch (error) {
-        console.error("Error generating document:", error);
-
-        if (error instanceof Error) {
-            if (error.name === 'AbortError') {
-                alert("요청 시간이 초과되었습니다.\n네트워크 연결을 확인하고 다시 시도해주세요.");
-            } else if (error.message.includes('Failed to fetch')) {
-                alert("서버에 연결할 수 없습니다.\n네트워크 연결과 n8n 서버 상태를 확인해주세요.");
-            } else {
-                alert(`문서 생성 중 오류가 발생했습니다:\n${error.message}`);
-            }
-        } else {
-            alert("알 수 없는 오류가 발생했습니다. 다시 시도해주세요.");
-        }
-    } finally {
-        setIsGenerating(false);
+      console.error("Error generating document:", error);
+      alert(`문서 생성 중 오류: ${error}`);
+    }
+    finally {
+      setIsGenerating(false);
     }
   };
 
   return (
     <div className="min-h-screen pt-28 pb-12 bg-paper-white relative flex flex-col items-center">
-       <div className="absolute top-0 w-full h-80 overflow-hidden pointer-events-none">
-          <BusanAnimation />
+      <div className="absolute top-0 w-full h-80 overflow-hidden pointer-events-none">
+        <BusanAnimation />
       </div>
 
       <div className="w-full max-w-4xl px-4 relative z-10">
-        <button 
+        <button
           onClick={() => onNavigate('documents.html')}
           className="flex items-center text-deep-navy/60 hover:text-deep-navy font-bold mb-6 transition-colors bg-white/50 backdrop-blur px-4 py-2 rounded-full inline-block"
         >
@@ -1024,7 +1032,7 @@ const CreateDocPage = ({ targetId, docName, onNavigate, onGenerateSuccess }: { t
           {/* Header */}
           <div className={`${category.color} p-8 md:p-10 text-center`}>
             <div className="w-16 h-16 bg-white rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-sm text-deep-navy">
-               <category.icon size={32} />
+              <category.icon size={32} />
             </div>
             <h1 className="font-display text-3xl md:text-4xl text-deep-navy mb-2">
               {docName ? decodeURIComponent(docName) : category.docType} 작성
@@ -1035,123 +1043,123 @@ const CreateDocPage = ({ targetId, docName, onNavigate, onGenerateSuccess }: { t
           </div>
 
           <div className="p-8 md:p-12 space-y-12">
-             
-             {/* Section 1: Dataset Preparation */}
-             <section className="space-y-6">
-                <h3 className="font-display text-2xl text-deep-navy flex items-center">
-                    <Database className="mr-2 text-mint" />
-                    1. 선택된 데이터셋
-                </h3>
 
-                {/* Selected Datasets */}
-                {selectedDatasets.length > 0 ? (
-                  <div className="bg-mint/10 rounded-2xl p-6 border border-mint/30">
-                      <h4 className="font-bold text-deep-navy mb-3 flex items-center text-sm">
-                          <Bot size={16} className="mr-2" />
-                          챗봇에서 선택된 데이터셋 ({selectedDatasets.length}개)
-                      </h4>
-                      <div className="space-y-2">
-                          {selectedDatasets.map((dataset, idx) => (
-                            <div key={idx} className="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
-                              <div className="flex items-start">
-                                <CheckCircle2 size={16} className="text-mint mr-2 mt-0.5 flex-shrink-0" />
-                                <div className="flex-1">
-                                  <div className="font-bold text-deep-navy text-sm mb-1">{dataset.serviceName}</div>
-                                  <div className="text-xs text-gray-600 line-clamp-2">{dataset.description}</div>
-                                  {dataset.provider && (
-                                    <div className="text-xs text-gray-400 mt-1">제공: {dataset.provider}</div>
-                                  )}
-                                </div>
-                              </div>
-                            </div>
-                          ))}
+            {/* Section 1: Dataset Preparation */}
+            <section className="space-y-6">
+              <h3 className="font-display text-2xl text-deep-navy flex items-center">
+                <Database className="mr-2 text-mint" />
+                1. 선택된 데이터셋
+              </h3>
+
+              {/* Selected Datasets */}
+              {selectedDatasets.length > 0 ? (
+                <div className="bg-mint/10 rounded-2xl p-6 border border-mint/30">
+                  <h4 className="font-bold text-deep-navy mb-3 flex items-center text-sm">
+                    <Bot size={16} className="mr-2" />
+                    챗봇에서 선택된 데이터셋 ({selectedDatasets.length}개)
+                  </h4>
+                  <div className="space-y-2">
+                    {selectedDatasets.map((dataset, idx) => (
+                      <div key={idx} className="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+                        <div className="flex items-start">
+                          <CheckCircle2 size={16} className="text-mint mr-2 mt-0.5 flex-shrink-0" />
+                          <div className="flex-1">
+                            <div className="font-bold text-deep-navy text-sm mb-1">{dataset.serviceName}</div>
+                            <div className="text-xs text-gray-600 line-clamp-2">{dataset.description}</div>
+                            {dataset.provider && (
+                              <div className="text-xs text-gray-400 mt-1">제공: {dataset.provider}</div>
+                            )}
+                          </div>
+                        </div>
                       </div>
+                    ))}
                   </div>
-                ) : (
-                  <div className="bg-gray-50 rounded-2xl p-6 border border-gray-200 text-center">
-                    <p className="text-gray-500">선택된 데이터셋이 없습니다. 챗봇에서 데이터셋을 선택해주세요.</p>
-                    <button
-                      onClick={() => onNavigate('chatbot.html')}
-                      className="mt-4 bg-mint text-deep-navy px-6 py-2 rounded-full font-bold text-sm hover:bg-mint/80 transition-colors"
-                    >
-                      챗봇으로 돌아가기
-                    </button>
-                  </div>
-                )}
-             </section>
-
-             <hr className="border-gray-100" />
-
-             {/* Section 2: Draft Settings */}
-             <section className="space-y-6">
-               <h3 className="font-display text-2xl text-deep-navy flex items-center">
-                    <PenTool className="mr-2 text-soft-yellow" /> 
-                    2. 문서 상세 설정
-                </h3>
-
-                <div>
-                   <label className="block text-deep-navy font-bold text-lg mb-2">문서 주제 / 아이디어</label>
-                   <input 
-                     type="text" 
-                     value={topic}
-                     onChange={(e) => setTopic(e.target.value)}
-                     className="w-full bg-gray-50 border-2 border-gray-200 rounded-xl p-4 focus:border-mint focus:ring-4 focus:ring-mint/10 outline-none transition-all font-medium text-lg"
-                     placeholder="예: 반려동물 동반 여행 시장 분석 보고서"
-                   />
                 </div>
+              ) : (
+                <div className="bg-gray-50 rounded-2xl p-6 border border-gray-200 text-center">
+                  <p className="text-gray-500">선택된 데이터셋이 없습니다. 챗봇에서 데이터셋을 선택해주세요.</p>
+                  <button
+                    onClick={() => onNavigate('chatbot.html')}
+                    className="mt-4 bg-mint text-deep-navy px-6 py-2 rounded-full font-bold text-sm hover:bg-mint/80 transition-colors"
+                  >
+                    챗봇으로 돌아가기
+                  </button>
+                </div>
+              )}
+            </section>
 
-                <div className="grid md:grid-cols-2 gap-6">
-                   <div>
-                     <label className="block text-deep-navy font-bold text-lg mb-2">문서 작성 목표</label>
-                     <select 
-                        value={goal}
-                        onChange={(e) => setGoal(e.target.value)}
-                        className="w-full bg-gray-50 border-2 border-gray-200 rounded-xl p-4 focus:border-mint outline-none appearance-none font-medium"
-                     >
-                       <option>투자 유치용</option>
-                       <option>내부 보고용</option>
-                       <option>공모전/지원사업 제출용</option>
-                       <option>시장 조사용</option>
-                     </select>
-                   </div>
-                   <div>
-                     <label className="block text-deep-navy font-bold text-lg mb-2">문서 톤앤매너</label>
-                     <select 
-                        value={tone}
-                        onChange={(e) => setTone(e.target.value)}
-                        className="w-full bg-gray-50 border-2 border-gray-200 rounded-xl p-4 focus:border-mint outline-none appearance-none font-medium"
-                     >
-                       <option>전문적이고 신뢰감 있는</option>
-                       <option>창의적이고 혁신적인</option>
-                       <option>객관적이고 분석적인</option>
-                       <option>친근하고 설득력 있는</option>
-                     </select>
-                   </div>
-                 </div>
-             </section>
+            <hr className="border-gray-100" />
 
-             <div className="pt-4">
-               <button 
-                 onClick={handleGenerate}
-                 disabled={isGenerating}
-                 className="w-full bg-deep-navy text-white font-bold text-xl py-5 rounded-2xl shadow-pop hover:shadow-pop-hover hover:-translate-y-1 transition-all flex items-center justify-center disabled:opacity-70 disabled:cursor-not-allowed"
-               >
-                 {isGenerating ? (
-                    <>
-                        <Loader2 className="animate-spin mr-2" />
-                        AI 문서 초안 생성 중...
-                    </>
-                 ) : (
-                    <>
-                        <FileText className="mr-2" />
-                        최종 문서 초안 생성하기
-                    </>
-                 )}
-               </button>
-               <p className="text-center text-gray-400 text-sm mt-4">
-                 * AI가 매칭된 데이터셋을 심층 분석하여 초안을 완성합니다.
-               </p>
-             </div>
+            {/* Section 2: Draft Settings */}
+            <section className="space-y-6">
+              <h3 className="font-display text-2xl text-deep-navy flex items-center">
+                <PenTool className="mr-2 text-soft-yellow" />
+                2. 문서 상세 설정
+              </h3>
+
+              <div>
+                <label className="block text-deep-navy font-bold text-lg mb-2">문서 주제 / 아이디어</label>
+                <input
+                  type="text"
+                  value={topic}
+                  onChange={(e) => setTopic(e.target.value)}
+                  className="w-full bg-gray-50 border-2 border-gray-200 rounded-xl p-4 focus:border-mint focus:ring-4 focus:ring-mint/10 outline-none transition-all font-medium text-lg"
+                  placeholder="예: 반려동물 동반 여행 시장 분석 보고서"
+                />
+              </div>
+
+              <div className="grid md:grid-cols-2 gap-6">
+                <div>
+                  <label className="block text-deep-navy font-bold text-lg mb-2">문서 작성 목표</label>
+                  <select
+                    value={goal}
+                    onChange={(e) => setGoal(e.target.value)}
+                    className="w-full bg-gray-50 border-2 border-gray-200 rounded-xl p-4 focus:border-mint outline-none appearance-none font-medium"
+                  >
+                    <option>투자 유치용</option>
+                    <option>내부 보고용</option>
+                    <option>공모전/지원사업 제출용</option>
+                    <option>시장 조사용</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-deep-navy font-bold text-lg mb-2">문서 톤앤매너</label>
+                  <select
+                    value={tone}
+                    onChange={(e) => setTone(e.target.value)}
+                    className="w-full bg-gray-50 border-2 border-gray-200 rounded-xl p-4 focus:border-mint outline-none appearance-none font-medium"
+                  >
+                    <option>전문적이고 신뢰감 있는</option>
+                    <option>창의적이고 혁신적인</option>
+                    <option>객관적이고 분석적인</option>
+                    <option>친근하고 설득력 있는</option>
+                  </select>
+                </div>
+              </div>
+            </section>
+
+            <div className="pt-4">
+              <button
+                onClick={handleGenerate}
+                disabled={isGenerating}
+                className="w-full bg-deep-navy text-white font-bold text-xl py-5 rounded-2xl shadow-pop hover:shadow-pop-hover hover:-translate-y-1 transition-all flex items-center justify-center disabled:opacity-70 disabled:cursor-not-allowed"
+              >
+                {isGenerating ? (
+                  <>
+                    <Loader2 className="animate-spin mr-2" />
+                    AI 문서 초안 생성 중...
+                  </>
+                ) : (
+                  <>
+                    <FileText className="mr-2" />
+                    최종 문서 초안 생성하기
+                  </>
+                )}
+              </button>
+              <p className="text-center text-gray-400 text-sm mt-4">
+                * AI가 매칭된 데이터셋을 심층 분석하여 초안을 완성합니다.
+              </p>
+            </div>
           </div>
         </div>
       </div>
@@ -1181,101 +1189,101 @@ const ResultPage = ({ onNavigate, data }: { onNavigate: (path: string) => void, 
 
   return (
     <div className="min-h-screen pt-28 pb-12 bg-paper-white relative flex flex-col items-center">
-       <div className="absolute top-0 w-full h-80 overflow-hidden pointer-events-none">
-          <BusanAnimation />
+      <div className="absolute top-0 w-full h-80 overflow-hidden pointer-events-none">
+        <BusanAnimation />
       </div>
 
       <div className="w-full max-w-5xl px-4 relative z-10">
-        
+
         {/* Success Header */}
         <div className="text-center mb-8 animate-float">
-           <div className="inline-flex items-center justify-center p-3 bg-white rounded-full shadow-soft mb-4 border border-mint">
-              <span className="text-4xl">🎉</span>
-           </div>
-           <h1 className="font-display text-3xl md:text-5xl text-deep-navy mb-2">
-             문서 생성이 완료되었습니다!
-           </h1>
-           <p className="text-xl text-gray-600">
-             DEFA가 데이터에 기반하여 작성한 초안입니다.
-             {isFallback && <span className="block text-sm text-red-400 mt-1">(연결된 데이터가 없어 샘플을 표시합니다)</span>}
-           </p>
+          <div className="inline-flex items-center justify-center p-3 bg-white rounded-full shadow-soft mb-4 border border-mint">
+            <span className="text-4xl">🎉</span>
+          </div>
+          <h1 className="font-display text-3xl md:text-5xl text-deep-navy mb-2">
+            문서 생성이 완료되었습니다!
+          </h1>
+          <p className="text-xl text-gray-600">
+            DEFA가 데이터에 기반하여 작성한 초안입니다.
+            {isFallback && <span className="block text-sm text-red-400 mt-1">(연결된 데이터가 없어 샘플을 표시합니다)</span>}
+          </p>
         </div>
 
         {/* Document Viewer */}
         <div className="bg-white rounded-[2rem] shadow-soft border-4 border-deep-navy/5 overflow-hidden flex flex-col md:flex-row h-[70vh]">
-           
-           {/* Sidebar Preview */}
-           <div className="hidden md:block w-64 bg-gray-50 border-r border-gray-100 p-6 overflow-y-auto">
-              <h4 className="font-bold text-deep-navy mb-4 text-sm uppercase tracking-wide text-gray-400">목차</h4>
-              <ul className="space-y-3 text-sm">
-                 {content.sections.map((sec, idx) => (
-                    <li key={idx} className="text-gray-600 hover:text-mint cursor-pointer truncate">
-                       {sec.heading}
-                    </li>
-                 ))}
-              </ul>
-           </div>
 
-           {/* Main Content */}
-           <div className="flex-1 p-8 md:p-12 overflow-y-auto bg-white relative">
-              <div className="max-w-3xl mx-auto space-y-8">
-                 <div className="border-b-2 border-deep-navy pb-6 mb-8">
-                    <h2 className="font-display text-3xl text-deep-navy">{content.title}</h2>
-                    <p className="text-gray-400 mt-2">Generated by DEFA AI • {new Date().toLocaleDateString()}</p>
-                 </div>
+          {/* Sidebar Preview */}
+          <div className="hidden md:block w-64 bg-gray-50 border-r border-gray-100 p-6 overflow-y-auto">
+            <h4 className="font-bold text-deep-navy mb-4 text-sm uppercase tracking-wide text-gray-400">목차</h4>
+            <ul className="space-y-3 text-sm">
+              {content.sections.map((sec, idx) => (
+                <li key={idx} className="text-gray-600 hover:text-mint cursor-pointer truncate">
+                  {sec.heading}
+                </li>
+              ))}
+            </ul>
+          </div>
 
-                 {content.sections.map((sec, idx) => (
-                    <div key={idx} className="space-y-3">
-                       <h3 className="font-bold text-xl text-deep-navy">{sec.heading}</h3>
-                       <p className="text-gray-600 leading-8 text-justify whitespace-pre-wrap">
-                          {sec.content}
-                       </p>
-                    </div>
-                 ))}
-                 
-                 <div className="p-6 bg-mint/10 rounded-xl border border-mint/30 mt-8">
-                    <h4 className="font-bold text-deep-navy mb-3 flex items-center">
-                       <Database size={16} className="mr-2 text-mint" />
-                       참조 데이터 출처
-                    </h4>
-                    {selectedDatasets.length > 0 ? (
-                      <ul className="text-sm text-gray-600 space-y-2">
-                        {selectedDatasets.map((dataset, idx) => (
-                          <li key={idx} className="flex items-start">
-                            <CheckCircle2 size={14} className="text-mint mr-2 mt-0.5 flex-shrink-0" />
-                            <div>
-                              <div className="font-medium text-deep-navy">{dataset.serviceName}</div>
-                              {dataset.provider && (
-                                <div className="text-xs text-gray-400 mt-0.5">제공: {dataset.provider}</div>
-                              )}
-                            </div>
-                          </li>
-                        ))}
-                      </ul>
-                    ) : (
-                      <p className="text-sm text-gray-400">참조 데이터셋 정보가 없습니다.</p>
-                    )}
-                 </div>
+          {/* Main Content */}
+          <div className="flex-1 p-8 md:p-12 overflow-y-auto bg-white relative">
+            <div className="max-w-3xl mx-auto space-y-8">
+              <div className="border-b-2 border-deep-navy pb-6 mb-8">
+                <h2 className="font-display text-3xl text-deep-navy">{content.title}</h2>
+                <p className="text-gray-400 mt-2">Generated by DEFA AI • {new Date().toLocaleDateString()}</p>
               </div>
-           </div>
+
+              {content.sections.map((sec, idx) => (
+                <div key={idx} className="space-y-3">
+                  <h3 className="font-bold text-xl text-deep-navy">{sec.heading}</h3>
+                  <p className="text-gray-600 leading-8 text-justify whitespace-pre-wrap">
+                    {sec.content}
+                  </p>
+                </div>
+              ))}
+
+              <div className="p-6 bg-mint/10 rounded-xl border border-mint/30 mt-8">
+                <h4 className="font-bold text-deep-navy mb-3 flex items-center">
+                  <Database size={16} className="mr-2 text-mint" />
+                  참조 데이터 출처
+                </h4>
+                {selectedDatasets.length > 0 ? (
+                  <ul className="text-sm text-gray-600 space-y-2">
+                    {selectedDatasets.map((dataset, idx) => (
+                      <li key={idx} className="flex items-start">
+                        <CheckCircle2 size={14} className="text-mint mr-2 mt-0.5 flex-shrink-0" />
+                        <div>
+                          <div className="font-medium text-deep-navy">{dataset.serviceName}</div>
+                          {dataset.provider && (
+                            <div className="text-xs text-gray-400 mt-0.5">제공: {dataset.provider}</div>
+                          )}
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="text-sm text-gray-400">참조 데이터셋 정보가 없습니다.</p>
+                )}
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* Action Buttons */}
         <div className="flex flex-col sm:flex-row justify-center gap-4 mt-8">
-           <button className="bg-white text-deep-navy border-2 border-gray-200 px-8 py-4 rounded-full font-bold text-lg shadow-sm hover:border-mint hover:text-mint transition-all flex items-center justify-center gap-2">
-              <Edit size={20} />
-              추가 편집 요청
-           </button>
-           <button className="bg-deep-navy text-white px-8 py-4 rounded-full font-bold text-lg shadow-pop hover:shadow-pop-hover hover:-translate-y-1 transition-all flex items-center justify-center gap-2">
-              <Download size={20} />
-              PDF / DOCX 다운로드
-           </button>
-           <button 
-             onClick={() => onNavigate('index.html')}
-             className="sm:hidden text-gray-400 text-sm mt-2 underline"
-           >
-             메인으로 돌아가기
-           </button>
+          <button className="bg-white text-deep-navy border-2 border-gray-200 px-8 py-4 rounded-full font-bold text-lg shadow-sm hover:border-mint hover:text-mint transition-all flex items-center justify-center gap-2">
+            <Edit size={20} />
+            추가 편집 요청
+          </button>
+          <button className="bg-deep-navy text-white px-8 py-4 rounded-full font-bold text-lg shadow-pop hover:shadow-pop-hover hover:-translate-y-1 transition-all flex items-center justify-center gap-2">
+            <Download size={20} />
+            PDF / DOCX 다운로드
+          </button>
+          <button
+            onClick={() => onNavigate('index.html')}
+            className="sm:hidden text-gray-400 text-sm mt-2 underline"
+          >
+            메인으로 돌아가기
+          </button>
         </div>
 
       </div>
@@ -1294,15 +1302,15 @@ function App() {
   const handleNavigate = (path: string) => {
     // Check if it's a hash link on index
     if (path.includes('#') && path.startsWith('index.html')) {
-       setCurrentPath('index.html');
-       const hash = path.split('#')[1];
-       setTimeout(() => {
-         const el = document.getElementById(hash);
-         if (el) el.scrollIntoView({ behavior: 'smooth' });
-       }, 100);
+      setCurrentPath('index.html');
+      const hash = path.split('#')[1];
+      setTimeout(() => {
+        const el = document.getElementById(hash);
+        if (el) el.scrollIntoView({ behavior: 'smooth' });
+      }, 100);
     } else {
-       setCurrentPath(path);
-       window.scrollTo(0, 0);
+      setCurrentPath(path);
+      window.scrollTo(0, 0);
     }
   };
 
@@ -1323,10 +1331,10 @@ function App() {
     if (pathBase === 'create_doc.html') {
       const cat = urlParams.get('cat') || undefined;
       const doc = urlParams.get('doc') || undefined;
-      return <CreateDocPage 
-        targetId={cat} 
-        docName={doc} 
-        onNavigate={handleNavigate} 
+      return <CreateDocPage
+        targetId={cat}
+        docName={doc}
+        onNavigate={handleNavigate}
         onGenerateSuccess={(data) => setGeneratedResult(data)}
       />;
     }
@@ -1338,13 +1346,13 @@ function App() {
 
   return (
     <div className="min-h-screen bg-paper-white font-sans text-deep-navy selection:bg-mint selection:text-deep-navy">
-      <Navigation 
-        activePath={currentPath} 
-        onNavigate={handleNavigate} 
-        isMenuOpen={isMenuOpen} 
-        setIsMenuOpen={setIsMenuOpen} 
+      <Navigation
+        activePath={currentPath}
+        onNavigate={handleNavigate}
+        isMenuOpen={isMenuOpen}
+        setIsMenuOpen={setIsMenuOpen}
       />
-      
+
       <main>
         {renderPage()}
       </main>
