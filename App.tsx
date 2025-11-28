@@ -154,7 +154,7 @@ const MainPage = ({ onNavigate }: { onNavigate: (path: string) => void }) => {
 
   return (
     <>
-      <section id="service-intro" className="relative pt-32 pb-20 md:pt-48 md:pb-32 overflow-hidden min-h-[90vh] flex items-center">
+      <section className="relative pt-32 pb-20 md:pt-48 md:pb-32 overflow-hidden min-h-[90vh] flex items-center">
         <BusanAnimation />
         
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
