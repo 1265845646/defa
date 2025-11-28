@@ -6,20 +6,29 @@ import BusanAnimation from './components/BusanAnimation';
 
 // --- Shared Components ---
 
-const LeekIcon = ({ className }: { className?: string }) => (
+export const LeekIcon = ({ className }: { className?: string }) => (
+  <img
+    src="/logo.png"
+    alt="DEFA Logo"
+    className={className}
+  />
+);
+
+export const HeaderLogo = () => (
   <div className="flex items-center gap-2">
     <img
       src="/logo.png"
       alt="DEFA Logo"
-      className={className}
+      className="w-10 h-10"
     />
 
-    <div className="flex flex-col">
+    <div className="flex flex-col leading-tight">
       <span className="font-bold text-lg">Data Finder</span>
       <span className="text-xs text-gray-500">AI AGENT</span>
     </div>
   </div>
 );
+
 
 
 const Navigation = ({ activePath, onNavigate, isMenuOpen, setIsMenuOpen }: any) => (
