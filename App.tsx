@@ -427,10 +427,11 @@ const ChatbotPage = ({ onNavigate }: { onNavigate: (path: string) => void }) => 
     }
   }, []);
 
-  const handleSend = async () => {
-    if (!input.trim()) return;
+  const handleSend = async (customInput?: string) => {
+    const messageToSend = customInput || input;
+    if (!messageToSend.trim()) return;
 
-    const userMsg = input;
+    const userMsg = messageToSend;
     setMessages(prev => [...prev, { type: 'user', text: userMsg }]);
     setInput('');
     setIsTyping(true);
@@ -973,43 +974,66 @@ const CreateDocPage = ({ targetId, docName, onNavigate, onGenerateSuccess }: { t
 
       let parsed: GeneratedDocData;
 
-      // 🔥 1) n8n이 배열 형태로 sections만 주는 경우 (sections 객체 포함)
-      if (Array.isArray(raw)) {
-        // 배열의 첫 번째 요소가 sections를 포함하는 경우
-        if (raw.length > 0 && raw[0].sections && Array.isArray(raw[0].sections)) {
+      // 🔥 n8n 응답 구조: 배열 안에 sections 배열이 있는 형태
+      // 예: [{ "ok": true, "sections": [...] }]
+      if (Array.isArray(raw) && raw.length > 0) {
+        // 첫 번째 요소에서 sections 추출
+        const firstItem = raw[0];
+
+        if (firstItem.sections && Array.isArray(firstItem.sections)) {
+          // sections 배열을 파싱
           parsed = {
             title: `${topic} 초안`,
-            sections: raw[0].sections.map((sec: any) => ({
-              heading: sec.heading,
+            sections: firstItem.sections.map((sec: any) => ({
+              heading: sec.heading || "",
               bullets: sec.bullets || [],
               paragraphs: sec.paragraphs || [],
-              content: [
-                ...(sec.bullets || []),
-                ...(sec.paragraphs || [])
-              ].join('\n')
+              content: "" // bullets와 paragraphs를 별도로 렌더링하므로 content는 비워둠
             }))
           };
         } else {
-          // 기존 로직 (sections가 배열 요소 자체인 경우)
+          // sections 배열이 없는 경우 fallback
           parsed = {
-            title: `${topic} 초안`,
-            sections: raw.map((sec) => ({
-              heading: sec.heading,
-              bullets: sec.bullets || [],
-              paragraphs: sec.paragraphs || [],
-              content: [
-                ...(sec.bullets || []),
-                ...(sec.paragraphs || [])
-              ].join('\n')
-            }))
+            title: topic,
+            sections: [{
+              heading: "본문",
+              bullets: [],
+              paragraphs: [],
+              content: JSON.stringify(raw, null, 2)
+            }]
           };
         }
       }
-      // 🔥 2) GPT처럼 {title, sections[]} 줬을 때 그대로 사용
-      else if (raw.title && raw.sections) {
-        parsed = raw;
+      // 객체 형태로 온 경우
+      else if (raw && typeof raw === 'object') {
+        if (raw.title && raw.sections) {
+          // {title, sections} 형태
+          parsed = raw;
+        } else if (raw.sections && Array.isArray(raw.sections)) {
+          // {sections} 형태
+          parsed = {
+            title: `${topic} 초안`,
+            sections: raw.sections.map((sec: any) => ({
+              heading: sec.heading || "",
+              bullets: sec.bullets || [],
+              paragraphs: sec.paragraphs || [],
+              content: ""
+            }))
+          };
+        } else {
+          // 알 수 없는 형태
+          parsed = {
+            title: topic,
+            sections: [{
+              heading: "본문",
+              bullets: [],
+              paragraphs: [],
+              content: JSON.stringify(raw, null, 2)
+            }]
+          };
+        }
       }
-      // 🔥 3) fallback — 최소 구조 만들기
+      // 그 외 fallback
       else {
         parsed = {
           title: topic,
@@ -1017,7 +1041,7 @@ const CreateDocPage = ({ targetId, docName, onNavigate, onGenerateSuccess }: { t
             heading: "본문",
             bullets: [],
             paragraphs: [],
-            content: JSON.stringify(raw, null, 2)
+            content: "응답 형식을 인식할 수 없습니다."
           }]
         };
       }
@@ -1196,6 +1220,16 @@ const ResultPage = ({ onNavigate, data }: { onNavigate: (path: string) => void, 
   // localStorage에서 선택된 데이터셋 가져오기
   const [selectedDatasets, setSelectedDatasets] = useState<DatasetCard[]>([]);
 
+  // 섹션 스크롤을 위한 ref
+  const sectionRefs = useRef<(HTMLDivElement | null)[]>([]);
+
+  const scrollToSection = (index: number) => {
+    const section = sectionRefs.current[index];
+    if (section) {
+      section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
+
   useEffect(() => {
     const stored = localStorage.getItem('selectedDatasets');
     if (stored) {
@@ -1238,7 +1272,11 @@ const ResultPage = ({ onNavigate, data }: { onNavigate: (path: string) => void, 
             <h4 className="font-bold text-deep-navy mb-4 text-sm uppercase tracking-wide text-gray-400">목차</h4>
             <ul className="space-y-3 text-sm">
               {content.sections.map((sec, idx) => (
-                <li key={idx} className="text-gray-600 hover:text-mint cursor-pointer truncate">
+                <li
+                  key={idx}
+                  onClick={() => scrollToSection(idx)}
+                  className="text-gray-600 hover:text-mint cursor-pointer truncate transition-colors"
+                >
                   {sec.heading}
                 </li>
               ))}
@@ -1254,7 +1292,11 @@ const ResultPage = ({ onNavigate, data }: { onNavigate: (path: string) => void, 
               </div>
 
               {content.sections.map((sec, idx) => (
-                <div key={idx} className="space-y-4">
+                <div
+                  key={idx}
+                  ref={(el) => (sectionRefs.current[idx] = el)}
+                  className="space-y-4"
+                >
                   <h3 className="font-bold text-xl text-deep-navy border-b-2 border-mint/30 pb-2">{sec.heading}</h3>
 
                   {/* Bullets 렌더링 */}
@@ -1356,9 +1398,12 @@ function App() {
         const el = document.getElementById(hash);
         if (el) el.scrollIntoView({ behavior: 'smooth' });
       }, 100);
+    } else if (path === 'index.html' && currentPath === 'index.html') {
+      // 같은 페이지에서 index.html로 이동 시 부드럽게 맨 위로 스크롤
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     } else {
       setCurrentPath(path);
-      window.scrollTo(0, 0);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   };
 
