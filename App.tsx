@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect, useRef } from 'react';
-import { Menu, X, ArrowRight, Search, CheckCircle2, FileText, Send, Bot, ArrowLeft, ChevronRight, PenTool, Database, Loader2, Download, Edit, Check } from 'lucide-react';
+import { Menu, X, ArrowRight, Search, CheckCircle2, FileText, Send, Bot, ArrowLeft, ChevronRight, PenTool, Database, Loader2, Download, Edit, Check, ExternalLink } from 'lucide-react';
 import { NAV_LINKS, HOW_IT_WORKS_STEPS, DATA_STATS, DOCUMENT_CATEGORIES, SAMPLE_RESULT_CONTENT, WEBHOOK_URL, CHATBOT_URL, API_TIMEOUT, GeneratedDocData } from './constants';
 import BusanAnimation from './components/BusanAnimation';
 
@@ -595,6 +595,32 @@ const ChatbotPage = ({ onNavigate }: { onNavigate: (path: string) => void }) => 
     setSelectedDatasets(selected);
   };
 
+  // 서비스명을 URL 파라미터로 변환하는 함수
+  const createDatasetUrl = (serviceName: string) => {
+    // 마지막 띄어쓰기는 %20으로, 나머지는 %로 변환
+    const parts = serviceName.split(' ');
+    let encoded = '';
+    for (let i = 0; i < parts.length; i++) {
+      encoded += parts[i];
+      if (i < parts.length - 1) {
+        // 마지막이 아니면 %로 연결
+        encoded += '%';
+      }
+    }
+    // 마지막 부분에 %20 추가 (예시 URL 패턴에 맞춤)
+    if (parts.length > 0) {
+      const lastPart = parts[parts.length - 1];
+      encoded = encoded.slice(0, -lastPart.length) + lastPart.replace(/ /g, '%20');
+    }
+    return `https://data.busan.go.kr/bdip/searchWrap.do?keyword=${encoded}&qryType=OR&from=dsh`;
+  };
+
+  const openDatasetPage = (serviceName: string, e: React.MouseEvent) => {
+    e.stopPropagation(); // 카드 클릭 이벤트 전파 방지
+    const url = createDatasetUrl(serviceName);
+    window.open(url, '_blank');
+  };
+
   const handleProceedWithSelectedDatasets = () => {
     const selected = datasets.filter(d => d.checked);
     if (selected.length === 0) {
@@ -723,15 +749,16 @@ const ChatbotPage = ({ onNavigate }: { onNavigate: (path: string) => void }) => 
               datasets.map((dataset, idx) => (
                 <div
                   key={idx}
-                  onClick={() => toggleDatasetCheck(idx)}
-                  className={`w-full text-left bg-white rounded-2xl p-4 border-2 cursor-pointer transition-all group ${dataset.checked
+                  className={`w-full text-left bg-white rounded-2xl p-4 border-2 transition-all group ${dataset.checked
                       ? 'border-mint bg-mint/5 shadow-md'
                       : 'border-gray-100 hover:border-mint hover:shadow-md'
                     }`}
                 >
                   <div className="flex items-start gap-3">
                     {/* 체크박스 */}
-                    <div className={`flex-shrink-0 w-5 h-5 rounded border-2 flex items-center justify-center transition-all mt-0.5 ${dataset.checked
+                    <div
+                      onClick={() => toggleDatasetCheck(idx)}
+                      className={`flex-shrink-0 w-5 h-5 rounded border-2 flex items-center justify-center transition-all mt-0.5 cursor-pointer ${dataset.checked
                         ? 'bg-mint border-mint'
                         : 'border-gray-300 group-hover:border-mint'
                       }`}>
@@ -739,10 +766,20 @@ const ChatbotPage = ({ onNavigate }: { onNavigate: (path: string) => void }) => 
                     </div>
 
                     <div className="flex-1 min-w-0">
-                      <h4 className={`font-bold text-sm mb-2 transition-colors line-clamp-2 ${dataset.checked ? 'text-mint' : 'text-deep-navy group-hover:text-mint'
-                        }`}>
-                        {dataset.serviceName}
-                      </h4>
+                      <div className="flex items-start justify-between gap-2 mb-2">
+                        <h4 className={`font-bold text-sm transition-colors line-clamp-2 flex-1 ${dataset.checked ? 'text-mint' : 'text-deep-navy group-hover:text-mint'
+                          }`}>
+                          {dataset.serviceName}
+                        </h4>
+                        {/* 바로가기 버튼 */}
+                        <button
+                          onClick={(e) => openDatasetPage(dataset.serviceName, e)}
+                          className="flex-shrink-0 p-1.5 rounded-lg bg-baby-blue/20 hover:bg-baby-blue/40 text-deep-navy transition-colors"
+                          title="데이터 포털에서 보기"
+                        >
+                          <ExternalLink size={14} />
+                        </button>
+                      </div>
                       <p className="text-xs text-gray-600 leading-relaxed line-clamp-3 mb-3">
                         {dataset.description}
                       </p>
