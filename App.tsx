@@ -464,106 +464,76 @@ const ChatbotPage = ({ onNavigate }: { onNavigate: (path: string) => void }) => 
       // n8n 응답 구조 파싱
       let botMessage = '';
       let datasetsFound = false;
-
-      // 응답 구조 확인
-      let dataToProcess;
-
-      if (Array.isArray(responseData)) {
-        // 배열이면 첫 번째 요소 사용
-        if (responseData.length > 0) {
-          dataToProcess = responseData[0];
-        } else {
-          throw new Error('응답 배열이 비어있습니다');
-        }
-      } else {
-        // 객체면 그대로 사용
-        dataToProcess = responseData;
-      }
-
-      // parsed 배열에서 데이터 추출
-      if (dataToProcess.parsed && Array.isArray(dataToProcess.parsed) && dataToProcess.parsed.length > 0) {
-        const parsedData = dataToProcess.parsed[0].body;
-
-        if (parsedData && parsedData.content) {
-          const content = parsedData.content;
-
-          // 문제 정의
-          if (content.문제정의) {
-            botMessage += `📊 **문제 정의**\n${content.문제정의}\n\n`;
-          }
-
-          // 핵심 키워드
-          if (content.핵심키워드 && Array.isArray(content.핵심키워드)) {
-            botMessage += `🔑 **핵심 키워드**\n${content.핵심키워드.join(', ')}\n\n`;
-          }
-
-          // 필요한 데이터셋 목록
-          if (content.필요한데이터셋 && Array.isArray(content.필요한데이터셋)) {
-            botMessage += `📁 **추천 데이터셋**\n\n`;
-            content.필요한데이터셋.forEach((dataset: any, idx: number) => {
-              botMessage += `${idx + 1}. **${dataset.데이터명}**\n`;
-              botMessage += `   - 내용: ${dataset.내용}\n`;
-              botMessage += `   - 출처: ${dataset.출처}\n\n`;
-            });
-            datasetsFound = true;
-          }
-        }
-      }
-
-      // body.content에서 실제 데이터셋 검색 결과 추출
       const extractedDatasets: DatasetCard[] = [];
 
-      if (dataToProcess.body && dataToProcess.body.content && Array.isArray(dataToProcess.body.content)) {
-        botMessage += `\n🔍 **검색된 실제 데이터셋**\n\n`;
+      // 응답 구조: 배열 형태
+      if (Array.isArray(responseData) && responseData.length > 0) {
+        const firstItem = responseData[0];
 
-        // 중복 제거를 위한 Set
-        const displayedServices = new Set<string>();
-        let displayCount = 0;
-        const MAX_DISPLAY = 10; // 최대 10개 추출
-
-        dataToProcess.body.content.forEach((queryResult: any) => {
-          if (queryResult.datasets && Array.isArray(queryResult.datasets) && displayCount < MAX_DISPLAY) {
-            queryResult.datasets.forEach((dataset: any) => {
-              if (dataset.contents && Array.isArray(dataset.contents) && displayCount < MAX_DISPLAY) {
-                dataset.contents.forEach((item: any) => {
-                  if (item.서비스명 && !displayedServices.has(item.서비스명) && displayCount < MAX_DISPLAY) {
-                    displayedServices.add(item.서비스명);
-                    displayCount++;
-
-                    // HTML 태그 제거 - "서비스 설명" (띄어쓰기 있음) 또는 "서비스설명" 둘 다 체크
-                    const rawDesc = item["서비스 설명"] || item.서비스설명 || '';
-                    const cleanDesc = rawDesc
-                      ? rawDesc.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim()
-                      : '설명 없음';
-
-                    // 데이터셋 카드 배열에 추가
-                    extractedDatasets.push({
-                      serviceName: item.서비스명,
-                      description: cleanDesc,
-                      provider: item.제공기관,
-                      views: item.조회수,
-                      downloads: item.다운로드수 || item["다운로드 수"]
-                    });
-
-                    botMessage += `✅ **${item.서비스명}**\n`;
-                    // 서비스 설명도 챗봇 메시지에 포함
-                    const shortDesc = cleanDesc.substring(0, 100);
-                    botMessage += `   ${shortDesc}${cleanDesc.length > 100 ? '...' : ''}\n`;
-                    if (item.제공기관) {
-                      botMessage += `   📍 ${item.제공기관}\n`;
-                    }
-                    botMessage += '\n';
-                  }
-                });
-              }
-            });
-          }
-        });
-
-        if (displayCount > 0) {
-          datasetsFound = true;
-          botMessage += `\n총 ${displayCount}개의 데이터셋을 찾았습니다. 오른쪽 패널에서 확인하세요.\n`;
+        // data.data.outputs.content 확인 (적합한 데이터가 없는 경우)
+        if (firstItem.data?.data?.outputs?.content) {
+          const noDataMessage = firstItem.data.data.outputs.content;
+          botMessage = `💬 ${noDataMessage}\n\n다른 검색어로 다시 시도해보시거나, 더 구체적인 주제를 입력해주세요.`;
+          datasetsFound = false;
         }
+        // data.data.outputs가 배열 형태인 경우 (데이터셋 검색 결과)
+        else if (firstItem.data?.data?.outputs && Array.isArray(firstItem.data.data.outputs)) {
+          const outputs = firstItem.data.data.outputs;
+
+          botMessage = `🔍 **검색된 데이터셋**\n\n`;
+
+          // 중복 제거를 위한 Set
+          const displayedServices = new Set<string>();
+          let displayCount = 0;
+          const MAX_DISPLAY = 10;
+
+          outputs.forEach((output: any) => {
+            if (output.contents && Array.isArray(output.contents) && displayCount < MAX_DISPLAY) {
+              output.contents.forEach((item: any) => {
+                if (item.서비스명 && !displayedServices.has(item.서비스명) && displayCount < MAX_DISPLAY) {
+                  displayedServices.add(item.서비스명);
+                  displayCount++;
+
+                  // HTML 태그 제거
+                  const rawDesc = item["서비스 설명"] || item.서비스설명 || '';
+                  const cleanDesc = rawDesc
+                    ? rawDesc.replace(/<br\s*\/?>/gi, '\n').replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim()
+                    : '설명 없음';
+
+                  // 데이터셋 카드 배열에 추가
+                  extractedDatasets.push({
+                    serviceName: item.서비스명,
+                    description: cleanDesc,
+                    provider: item.제공기관 || output.분류 || '미제공',
+                    views: item.조회수,
+                    downloads: item.다운로드수 || item["다운로드 수"]
+                  });
+
+                  botMessage += `✅ **${item.서비스명}**\n`;
+                  const shortDesc = cleanDesc.substring(0, 100);
+                  botMessage += `   ${shortDesc}${cleanDesc.length > 100 ? '...' : ''}\n`;
+                  if (item.분류) {
+                    botMessage += `   🏷️ 분류: ${item.분류}\n`;
+                  }
+                  botMessage += '\n';
+                }
+              });
+            }
+          });
+
+          if (displayCount > 0) {
+            datasetsFound = true;
+            botMessage += `\n총 ${displayCount}개의 데이터셋을 찾았습니다. 오른쪽 패널에서 확인하세요.\n`;
+          } else {
+            botMessage = '😔 검색된 데이터셋이 없습니다. 다른 검색어로 시도해보세요.';
+          }
+        }
+        // 기타 알 수 없는 구조
+        else {
+          botMessage = '⚠️ 응답 형식을 인식할 수 없습니다. 응답 구조를 확인해주세요.';
+        }
+      } else {
+        botMessage = '⚠️ 빈 응답을 받았습니다.';
       }
 
       // 데이터셋 상태 업데이트
@@ -573,14 +543,9 @@ const ChatbotPage = ({ onNavigate }: { onNavigate: (path: string) => void }) => 
 
       setIsTyping(false);
 
-      // botMessage가 비어있으면 기본 메시지라도 표시
-      if (!botMessage.trim()) {
-        botMessage = '⚠️ n8n에서 응답을 받았지만 파싱 가능한 데이터가 없습니다.\n\n응답 구조를 확인해주세요.';
-      }
-
       setMessages((prev: any) => [...prev, {
         type: 'bot',
-        text: botMessage + (datasetsFound ? '\n📋 탐색된 데이터셋을 기반으로 적절한 문서 포맷을 선택해 주세요.' : '')
+        text: botMessage + (datasetsFound ? '\n\n📋 탐색된 데이터셋을 기반으로 적절한 문서 포맷을 선택해 주세요.' : '')
       }]);
       setShowProceedBtn(datasetsFound);
 
