@@ -444,216 +444,176 @@ const ChatbotPage = ({ onNavigate }: { onNavigate: (path: string) => void }) => 
     }
   }, []);
 
+
+
+
+
+  // ---------------------------------
+
+
+
   const handleSend = async (customInput?: string) => {
-    const messageToSend = customInput || input;
-    // customInput이 객체로 전달될 수 있으므로 문자열로 변환
-    const userMsg = typeof messageToSend === 'string' ? messageToSend : String(messageToSend);
-    if (!userMsg.trim()) return;
-    setMessages(prev => [...prev, { type: 'user', text: userMsg }]);
-    setInput('');
-    setIsTyping(true);
+  const messageToSend = customInput || input;
+  if (!messageToSend.trim()) return;
 
-    try {
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), API_TIMEOUT);
+  setMessages(prev => [...prev, { type: "user", text: messageToSend }]);
+  setInput("");
+  setIsTyping(true);
 
-      const response = await fetch(CHATBOT_URL, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          topic: userMsg,
-          timestamp: new Date().toISOString()
-        }),
-        signal: controller.signal
-      });
+  try {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), API_TIMEOUT);
 
-      clearTimeout(timeoutId);
+    const response = await fetch(CHATBOT_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        topic: messageToSend,
+        timestamp: new Date().toISOString(),
+      }),
+      signal: controller.signal,
+    });
 
-      if (!response.ok) {
-        throw new Error(`Server error: ${response.status}`);
-      }
+    clearTimeout(timeoutId);
+    if (!response.ok) throw new Error(`Server error ${response.status}`);
 
-      const responseData = await response.json();
-      console.log('n8n 응답 (전체):', responseData);
-      console.log('응답 타입:', typeof responseData, '배열 여부:', Array.isArray(responseData));
+    const responseData = await response.json();
+    console.log("응답 전체:", responseData);
 
-      // n8n 응답 구조 파싱
-      let botMessage = '';
-      let datasetsFound = false;
-      const extractedDatasets: DatasetCard[] = [];
+    const firstItem = Array.isArray(responseData) ? responseData[0] : responseData;
 
-      // n8n 응답이 배열 또는 객체일 수 있음
-      // 배열: [{ parsed: [...], body: {...}, "data.data.outputs.content": "..." }]
-      // 객체: { parsed: [...], body: {...}, "data.data.outputs.content": "..." }
-      let firstItem;
-      if (Array.isArray(responseData) && responseData.length > 0) {
-        firstItem = responseData[0];
-      } else if (responseData && typeof responseData === 'object') {
-        firstItem = responseData;
-      }
+    let botMessage = "";
+    const datasets: DatasetCard[] = [];
 
-      if (firstItem) {
-        console.log('첫 번째 아이템:', firstItem);
+    // ============================================================
+    // 1) 🔥 미매칭 탐지 — 최우선 검사
+    // ============================================================
+    const rawContent = firstItem?.["data.data.outputs.content"];
+    let mismatch = false;
+    let mismatchMsg = "";
 
-        // 1. parsed 배열에서 문제정의, 핵심키워드, 필요한데이터셋 추출
-        if (firstItem.parsed && Array.isArray(firstItem.parsed) && firstItem.parsed.length > 0) {
-          const parsedData = firstItem.parsed[0].body;
-          if (parsedData?.content) {
-            const content = parsedData.content;
-
-            // 문제 정의
-            if (content.문제정의) {
-              botMessage += `📊 **문제 정의**\n${content.문제정의}\n\n`;
-            }
-
-            // 핵심 키워드
-            if (content.핵심키워드 && Array.isArray(content.핵심키워드)) {
-              botMessage += `🔑 **핵심 키워드**\n${content.핵심키워드.join(', ')}\n\n`;
-            }
-
-            // 필요한 데이터셋 목록
-            if (content.필요한데이터셋 && Array.isArray(content.필요한데이터셋)) {
-              botMessage += `📁 **AI 추천 데이터셋**\n\n`;
-              content.필요한데이터셋.forEach((dataset: any, idx: number) => {
-                botMessage += `${idx + 1}. **${dataset.데이터명}**\n`;
-                botMessage += `   - 내용: ${dataset.내용}\n`;
-                botMessage += `   - 출처: ${dataset.출처}\n\n`;
-              });
-            }
-          }
+    if (rawContent) {
+      try {
+        const parsed = JSON.parse(rawContent);
+        if (parsed["미매칭 안내"]) {
+          mismatch = true;
+          mismatchMsg = parsed["미매칭 안내"];
         }
-
-        // 2. body.content 배열에서 실제 검색된 데이터셋 추출
-        if (firstItem.body?.content && Array.isArray(firstItem.body.content)) {
-          botMessage += `\n🔍 **검색된 실제 데이터셋**\n\n`;
-
-          const displayedServices = new Set<string>();
-          let displayCount = 0;
-          const MAX_DISPLAY = 10;
-
-          firstItem.body.content.forEach((queryResult: any) => {
-            if (queryResult.datasets && Array.isArray(queryResult.datasets)) {
-              queryResult.datasets.forEach((dataset: any) => {
-                if (dataset.contents && Array.isArray(dataset.contents) && displayCount < MAX_DISPLAY) {
-                  dataset.contents.forEach((item: any) => {
-                    if (item.서비스명 && !displayedServices.has(item.서비스명) && displayCount < MAX_DISPLAY) {
-                      displayedServices.add(item.서비스명);
-                      displayCount++;
-
-                      // HTML 태그 제거
-                      const rawDesc = item["서비스 설명"] || item.서비스설명 || '';
-                      const cleanDesc = rawDesc
-                        ? rawDesc.replace(/<br\s*\/?>/gi, '\n').replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim()
-                        : '설명 없음';
-
-                      // 데이터셋 카드 배열에 추가
-                      extractedDatasets.push({
-                        serviceName: item.서비스명,
-                        description: cleanDesc,
-                        provider: item.제공기관 || item.분류 || '미제공',
-                        views: item.조회수,
-                        downloads: item.다운로드수 || item["다운로드 수"]
-                      });
-
-                      botMessage += `✅ **${item.서비스명}**\n`;
-                      const shortDesc = cleanDesc.substring(0, 100);
-                      botMessage += `   ${shortDesc}${cleanDesc.length > 100 ? '...' : ''}\n`;
-                      if (item.분류) {
-                        botMessage += `   🏷️ 분류: ${item.분류}\n`;
-                      }
-                      botMessage += '\n';
-                    }
-                  });
-                }
-              });
-            }
-          });
-
-          if (displayCount > 0) {
-            datasetsFound = true;
-            botMessage += `\n총 ${displayCount}개의 데이터셋을 찾았습니다. 오른쪽 패널에서 확인하세요.\n`;
-          }
+      } catch {
+        if (typeof rawContent === "string" && rawContent.includes("죄송합니다")) {
+          mismatch = true;
+          mismatchMsg = rawContent;
         }
-
-        // 3. data.data.outputs.content가 있는 경우 (적합한 데이터가 없거나 추가 정보)
-        if (firstItem["data.data.outputs.content"]) {
-          const outputContent = firstItem["data.data.outputs.content"];
-          console.log('추가 정보:', outputContent);
-
-          // JSON 형태인 경우 파싱 시도
-          try {
-            const parsedContent = JSON.parse(outputContent);
-            if (parsedContent.추천데이터셋 || parsedContent["추천 데이터셋"]) {
-              const recommendations = parsedContent.추천데이터셋 || parsedContent["추천 데이터셋"];
-              botMessage += `\n💡 **AI 분석 기반 추천**\n\n`;
-              recommendations.forEach((rec: any) => {
-                botMessage += `📌 **${rec.데이터명}**\n`;
-                if (rec.유사도) botMessage += `   - 유사도: ${rec.유사도}\n`;
-                if (rec.근거) botMessage += `   - 근거: ${rec.근거}\n`;
-                botMessage += '\n';
-              });
-            }
-          } catch (e) {
-            // JSON이 아닌 경우 텍스트로 처리
-            if (!datasetsFound) {
-              botMessage = `💬 ${outputContent}\n\n다른 검색어로 다시 시도해보시거나, 더 구체적인 주제를 입력해주세요.`;
-            }
-          }
-        }
-
-        // 데이터셋이 하나도 없는 경우
-        if (extractedDatasets.length === 0 && !botMessage.includes('문제 정의')) {
-          console.log('알 수 없는 응답 구조. firstItem 전체:', JSON.stringify(firstItem, null, 2));
-          botMessage = '⚠️ 응답 형식을 인식할 수 없습니다. 응답 구조를 확인해주세요.\n\n브라우저 콘솔(F12)에서 상세 로그를 확인해주세요.';
-        }
-      } else {
-        console.log('빈 응답 또는 유효하지 않은 응답. responseData:', responseData);
-        botMessage = '⚠️ 빈 응답을 받았습니다.\n\n브라우저 콘솔(F12)에서 상세 로그를 확인해주세요.';
       }
-
-      // 데이터셋 상태 업데이트
-      if (extractedDatasets.length > 0) {
-        setDatasets(extractedDatasets);
-      }
-
-      setIsTyping(false);
-
-      setMessages((prev: any) => [...prev, {
-        type: 'bot',
-        text: botMessage + (datasetsFound ? '\n\n📋 탐색된 데이터셋을 기반으로 적절한 문서 포맷을 선택해 주세요.' : '')
-      }]);
-      setShowProceedBtn(datasetsFound);
-
-    } catch (error) {
-      console.error("Chatbot error:", error);
-      setIsTyping(false);
-
-      // 에러 메시지만 표시 (하드코딩된 데이터 없음)
-      let errorMessage = '⚠️ 데이터셋 탐색 중 오류가 발생했습니다.\n\n';
-
-      if (error instanceof Error) {
-        if (error.name === 'AbortError') {
-          errorMessage += '요청 시간이 초과되었습니다. (60초)\nn8n 서버 처리 시간이 오래 걸리고 있습니다.';
-        } else if (error.message.includes('Failed to fetch')) {
-          errorMessage += 'n8n 서버에 연결할 수 없습니다.\n네트워크 연결과 서버 상태를 확인해주세요.';
-        } else {
-          errorMessage += `오류 상세: ${error.message}`;
-        }
-      } else {
-        errorMessage += '알 수 없는 오류가 발생했습니다.';
-      }
-
-      errorMessage += '\n\n다시 시도해주세요.';
-
-      setMessages(prev => [...prev, {
-        type: 'bot',
-        text: errorMessage
-      }]);
-      setShowProceedBtn(false);
     }
-  };
+
+    // ============================================================
+    // 2) 🔥 미매칭이면 즉시 종료 (데이터셋 파싱 금지)
+    // ============================================================
+    if (mismatch) {
+      console.log("미매칭 탐지 → 데이터셋 파싱 중단");
+      setDatasets([]);
+      setShowProceedBtn(false);
+      setIsTyping(false);
+      setMessages(prev => [...prev, { type: "bot", text: mismatchMsg }]);
+      return;
+    }
+
+    // ============================================================
+    // 3) 문제 정의 / 키워드 / 필요한 데이터셋 (GPT 구조)
+    // ============================================================
+    const parsedBlock = firstItem?.parsed?.[0]?.body?.content;
+
+    if (parsedBlock) {
+      if (parsedBlock.문제정의) {
+        botMessage += `📊 **문제 정의**\n${parsedBlock.문제정의}\n\n`;
+      }
+      if (parsedBlock.핵심키워드) {
+        botMessage += `🔑 **핵심 키워드**\n${parsedBlock.핵심키워드.join(", ")}\n\n`;
+      }
+
+      if (parsedBlock.필요한데이터셋) {
+        botMessage += `📁 **AI 추천 데이터셋**\n\n`;
+        parsedBlock.필요한데이터셋.forEach((d, i) => {
+          botMessage += `${i + 1}. **${d.데이터명}**\n - 내용: ${d.내용}\n - 출처: ${d.출처}\n\n`;
+        });
+      }
+    }
+
+    // ============================================================
+    // 4) 실제 매칭된 데이터셋만 파싱
+    // ============================================================
+    const contentBlock = firstItem?.body?.content;
+
+    if (contentBlock && Array.isArray(contentBlock)) {
+      botMessage += `\n🔍 **검색된 실제 데이터셋**\n\n`;
+
+      const seen = new Set<string>();
+
+      contentBlock.forEach(query => {
+        query?.datasets?.forEach(ds => {
+          ds?.contents?.forEach(item => {
+            if (!item.서비스명 || seen.has(item.서비스명)) return;
+            seen.add(item.서비스명);
+
+            const desc = (item["서비스 설명"] || "").replace(/<[^>]+>/g, " ").trim();
+
+            datasets.push({
+              serviceName: item.서비스명,
+              description: desc,
+              provider: item.분류 || "미제공",
+              views: item.조회수,
+              downloads: item.다운로드수,
+            });
+
+            botMessage += `✅ **${item.서비스명}**\n${desc}\n\n`;
+          });
+        });
+      });
+    }
+
+    // ============================================================
+    // 5) 데이터셋이 없다? → 미매칭으로 처리
+    // ============================================================
+    if (datasets.length === 0) {
+      const fallback = rawContent || "❗ 관련 데이터셋을 찾을 수 없습니다.";
+      setDatasets([]);
+      setShowProceedBtn(false);
+      setIsTyping(false);
+      setMessages(prev => [...prev, { type: "bot", text: fallback }]);
+      return;
+    }
+
+    // ============================================================
+    // 6) 정상 매칭 — 오른쪽 패널 띄우기
+    // ============================================================
+    setDatasets(datasets);
+    setShowProceedBtn(true);
+    setIsTyping(false);
+
+    setMessages(prev => [
+      ...prev,
+      {
+        type: "bot",
+        text:
+          botMessage +
+          `\n\n📋 탐색된 데이터셋을 기반으로 적절한 문서 포맷을 선택해 주세요.`,
+      },
+    ]);
+  } catch (err) {
+    console.error(err);
+    setIsTyping(false);
+    setMessages(prev => [
+      ...prev,
+      { type: "bot", text: "⚠️ 서버 오류가 발생했습니다." },
+    ]);
+  }
+};
+
+
+
+
+  // ------------------------------------------------
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) {
@@ -739,8 +699,8 @@ const ChatbotPage = ({ onNavigate }: { onNavigate: (path: string) => void }) => 
                   <LeekIcon className="h-10 w-auto flex-shrink-0 mr-3 mt-1" />
                 )}
                 <div className={`p-5 rounded-2xl shadow-sm border ${msg.type === 'user'
-                    ? 'bg-deep-navy text-white rounded-tr-none border-deep-navy shadow-pop'
-                    : 'bg-white text-deep-navy rounded-tl-none border-gray-100'
+                  ? 'bg-deep-navy text-white rounded-tr-none border-deep-navy shadow-pop'
+                  : 'bg-white text-deep-navy rounded-tl-none border-gray-100'
                   } leading-relaxed whitespace-pre-line`}>
                   {msg.text}
                 </div>
@@ -827,8 +787,8 @@ const ChatbotPage = ({ onNavigate }: { onNavigate: (path: string) => void }) => 
                 <div
                   key={idx}
                   className={`w-full text-left bg-white rounded-2xl p-4 border-2 transition-all group ${dataset.checked
-                      ? 'border-mint bg-mint/5 shadow-md'
-                      : 'border-gray-100 hover:border-mint hover:shadow-md'
+                    ? 'border-mint bg-mint/5 shadow-md'
+                    : 'border-gray-100 hover:border-mint hover:shadow-md'
                     }`}
                 >
                   <div className="flex items-start gap-3">
@@ -838,7 +798,7 @@ const ChatbotPage = ({ onNavigate }: { onNavigate: (path: string) => void }) => 
                       className={`flex-shrink-0 w-5 h-5 rounded border-2 flex items-center justify-center transition-all mt-0.5 cursor-pointer ${dataset.checked
                         ? 'bg-mint border-mint'
                         : 'border-gray-300 group-hover:border-mint'
-                      }`}>
+                        }`}>
                       {dataset.checked && <Check size={14} className="text-white" strokeWidth={3} />}
                     </div>
 
@@ -932,8 +892,8 @@ const DocumentListPage = ({ onNavigate }: { onNavigate: (path: string) => void }
                   key={cat.id}
                   onClick={() => setSelectedCategory(cat.id)}
                   className={`w-full flex items-center p-3 rounded-xl transition-all mb-2 ${selectedCategory === cat.id
-                      ? `${cat.color} text-deep-navy shadow-sm font-bold`
-                      : 'hover:bg-gray-50 text-gray-500'
+                    ? `${cat.color} text-deep-navy shadow-sm font-bold`
+                    : 'hover:bg-gray-50 text-gray-500'
                     }`}
                 >
                   <cat.icon size={20} className="mr-3" />
