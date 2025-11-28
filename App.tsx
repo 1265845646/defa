@@ -37,11 +37,10 @@ const Navigation = ({ activePath, onNavigate, isMenuOpen, setIsMenuOpen }: any) 
               {link.name}
             </button>
           ))}
-          <button 
+          <button
             onClick={() => onNavigate('chatbot.html')}
-            className="bg-soft-yellow text-deep-navy px-6 py-2.5 rounded-full font-bold border-2 border-deep-navy shadow-pop hover:shadow-pop-hover hover:-translate-y-0.5 transition-all flex items-center gap-2"
+            className="bg-soft-yellow text-deep-navy px-6 py-2.5 rounded-full font-bold border-2 border-deep-navy shadow-pop hover:shadow-pop-hover hover:-translate-y-0.5 transition-all"
           >
-            <LeekIcon className="w-4 h-4" />
             데파 시작하기
           </button>
         </div>
@@ -73,14 +72,13 @@ const Navigation = ({ activePath, onNavigate, isMenuOpen, setIsMenuOpen }: any) 
             {link.name}
           </button>
         ))}
-        <button 
+        <button
           onClick={() => {
             onNavigate('chatbot.html');
             setIsMenuOpen(false);
           }}
-          className="w-full bg-soft-yellow text-deep-navy py-3 rounded-xl font-bold border-2 border-deep-navy shadow-pop flex items-center justify-center gap-2"
+          className="w-full bg-soft-yellow text-deep-navy py-3 rounded-xl font-bold border-2 border-deep-navy shadow-pop"
         >
-          <LeekIcon className="w-5 h-5" />
           데파 시작하기
         </button>
       </div>
@@ -93,10 +91,7 @@ const Footer = ({ onNavigate }: any) => (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div className="grid md:grid-cols-4 gap-12 mb-12">
         <div className="col-span-1 md:col-span-1">
-          <div className="flex items-center gap-2 mb-4 cursor-pointer" onClick={() => onNavigate('index.html')}>
-             <div className="w-8 h-8 bg-mint rounded-lg flex items-center justify-center border border-deep-navy">
-                <LeekIcon className="w-6 h-6 pb-1" />
-              </div>
+          <div className="mb-4 cursor-pointer" onClick={() => onNavigate('index.html')}>
              <span className="font-display text-xl font-bold text-deep-navy">DEFA</span>
           </div>
           <p className="text-gray-500 text-sm leading-relaxed">
@@ -141,18 +136,32 @@ const Footer = ({ onNavigate }: any) => (
 
 const MainPage = ({ onNavigate }: { onNavigate: (path: string) => void }) => {
   const [activeTab, setActiveTab] = useState(DOCUMENT_CATEGORIES[0].id);
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const handleSearch = () => {
+    if (searchQuery.trim()) {
+      // 검색어를 localStorage에 저장하고 챗봇 페이지로 이동
+      localStorage.setItem('initialSearchQuery', searchQuery.trim());
+      onNavigate('chatbot.html');
+    }
+  };
+
+  const handleSearchKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      handleSearch();
+    }
+  };
 
   return (
     <>
-      <section className="relative pt-32 pb-20 md:pt-48 md:pb-32 overflow-hidden min-h-[90vh] flex items-center">
+      <section id="service-intro" className="relative pt-32 pb-20 md:pt-48 md:pb-32 overflow-hidden min-h-[90vh] flex items-center">
         <BusanAnimation />
         
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div className="space-y-8 text-center md:text-left">
               <div className="inline-block px-4 py-2 bg-white/90 backdrop-blur rounded-full border-2 border-mint shadow-sm mb-2 animate-float">
-                <span className="text-deep-navy font-bold flex items-center gap-2">
-                  <LeekIcon className="w-5 h-5" />
+                <span className="text-deep-navy font-bold">
                   아이디어만 있으면 데이터는 데파가 찾아요!
                 </span>
               </div>
@@ -165,32 +174,39 @@ const MainPage = ({ onNavigate }: { onNavigate: (path: string) => void }) => {
               </h1>
               
               <p className="text-xl md:text-2xl text-deep-navy/70 leading-relaxed font-medium">
-                "이 데이터 어디서 찾지?" 고민하지 마세요.<br className="md:hidden" />
+                "이 데이터 어디서 찾지?" 고민하지 마세요.<br />
                 DEFA가 찾아주고, 문서 초안까지 써드립니다.
               </p>
 
               <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start pt-4">
-                <button 
+                <button
                   onClick={() => onNavigate('chatbot.html')}
                   className="group bg-deep-navy text-white px-8 py-4 rounded-full font-bold text-xl shadow-pop hover:shadow-pop-hover hover:-translate-y-1 transition-all flex items-center justify-center gap-2"
                 >
-                   <LeekIcon className="w-6 h-6 pb-1" />
                    데파 시작하기
                    <ArrowRight className="group-hover:translate-x-1 transition-transform" />
                 </button>
               </div>
 
-              {/* Search Mockup */}
+              {/* Search Input */}
               <div className="mt-8 bg-white p-2 rounded-full shadow-soft border border-mint/50 max-w-md mx-auto md:mx-0 flex items-center transform rotate-1 hover:rotate-0 transition-transform duration-300">
                 <div className="w-10 h-10 bg-mint rounded-full flex items-center justify-center ml-1">
                     <Search className="text-deep-navy w-5 h-5" />
                 </div>
-                <div className="flex-1 px-4 text-gray-400 font-medium truncate">
-                    "반려동물 동반 여행 시장 분석해줘"
-                </div>
-                <div className="bg-deep-navy text-white px-4 py-2 rounded-full text-sm font-bold">
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onKeyDown={handleSearchKeyDown}
+                  placeholder="반려동물 동반 여행 시장 분석해줘"
+                  className="flex-1 px-4 font-medium outline-none bg-transparent placeholder:text-gray-400"
+                />
+                <button
+                  onClick={handleSearch}
+                  className="bg-deep-navy text-white px-4 py-2 rounded-full text-sm font-bold hover:bg-baby-blue hover:text-deep-navy transition-colors"
+                >
                     검색
-                </div>
+                </button>
               </div>
             </div>
             
@@ -252,7 +268,7 @@ const MainPage = ({ onNavigate }: { onNavigate: (path: string) => void }) => {
         </div>
       </section>
 
-      <section id="solutions" className="py-24 bg-mint/10 relative overflow-hidden">
+      <section id="features" className="py-24 bg-mint/10 relative overflow-hidden">
         <div className="absolute top-0 right-0 w-64 h-64 bg-mint/20 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
         <div className="absolute bottom-0 left-0 w-96 h-96 bg-soft-yellow/20 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2"></div>
 
@@ -359,11 +375,10 @@ const MainPage = ({ onNavigate }: { onNavigate: (path: string) => void }) => {
              준비되셨나요?<br/>
              <span className="text-mint">데파</span>와 함께 문서를 완성하세요!
           </h2>
-          <button 
+          <button
             onClick={() => onNavigate('chatbot.html')}
-            className="bg-soft-yellow text-deep-navy text-xl md:text-2xl font-bold px-12 py-5 rounded-full shadow-[0_0_40px_-10px_rgba(255,250,205,0.6)] hover:scale-105 hover:shadow-[0_0_60px_-10px_rgba(255,250,205,0.8)] transition-all transform duration-300 flex items-center justify-center gap-2 mx-auto"
+            className="bg-soft-yellow text-deep-navy text-xl md:text-2xl font-bold px-12 py-5 rounded-full shadow-[0_0_40px_-10px_rgba(255,250,205,0.6)] hover:scale-105 hover:shadow-[0_0_60px_-10px_rgba(255,250,205,0.8)] transition-all transform duration-300 mx-auto"
           >
-            <LeekIcon className="w-8 h-8 pb-1" />
             지금 무료로 시작하기 🚀
           </button>
         </div>
@@ -400,10 +415,24 @@ const ChatbotPage = ({ onNavigate }: { onNavigate: (path: string) => void }) => 
     scrollToBottom();
   }, [messages, isTyping]);
 
-  const handleSend = async () => {
-    if (!input.trim()) return;
+  // 초기 검색어가 있으면 자동 실행
+  useEffect(() => {
+    const initialQuery = localStorage.getItem('initialSearchQuery');
+    if (initialQuery) {
+      localStorage.removeItem('initialSearchQuery');
+      setInput(initialQuery);
+      // 짧은 딜레이 후 자동 실행
+      setTimeout(() => {
+        handleSend(initialQuery);
+      }, 500);
+    }
+  }, []);
 
-    const userMsg = input;
+  const handleSend = async (customInput?: string) => {
+    const messageText = customInput || input;
+    if (!messageText.trim()) return;
+
+    const userMsg = messageText;
     setMessages(prev => [...prev, { type: 'user', text: userMsg }]);
     setInput('');
     setIsTyping(true);
@@ -502,9 +531,10 @@ const ChatbotPage = ({ onNavigate }: { onNavigate: (path: string) => void }) => 
                     displayedServices.add(item.서비스명);
                     displayCount++;
 
-                    // HTML 태그 제거
-                    const cleanDesc = item.서비스설명
-                      ? item.서비스설명.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim()
+                    // HTML 태그 제거 - "서비스 설명" (띄어쓰기 있음) 또는 "서비스설명" 둘 다 체크
+                    const rawDesc = item["서비스 설명"] || item.서비스설명 || '';
+                    const cleanDesc = rawDesc
+                      ? rawDesc.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim()
                       : '설명 없음';
 
                     // 데이터셋 카드 배열에 추가
@@ -513,7 +543,7 @@ const ChatbotPage = ({ onNavigate }: { onNavigate: (path: string) => void }) => 
                       description: cleanDesc,
                       provider: item.제공기관,
                       views: item.조회수,
-                      downloads: item.다운로드수
+                      downloads: item.다운로드수 || item["다운로드 수"]
                     });
 
                     botMessage += `✅ **${item.서비스명}**\n`;
@@ -623,9 +653,7 @@ const ChatbotPage = ({ onNavigate }: { onNavigate: (path: string) => void }) => 
 
           {/* Chat Header */}
           <div className="bg-mint/30 p-6 flex items-center border-b border-white">
-            <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center border-2 border-mint shadow-sm mr-4">
-              <LeekIcon className="w-8 h-8 pb-1" />
-            </div>
+            <LeekIcon className="h-14 w-auto mr-4" />
             <div>
               <h2 className="font-display text-2xl text-deep-navy">DEFA Chatbot</h2>
               <p className="text-sm text-deep-navy/60 font-medium flex items-center">
@@ -641,9 +669,7 @@ const ChatbotPage = ({ onNavigate }: { onNavigate: (path: string) => void }) => 
             {messages.map((msg, idx) => (
               <div key={idx} className={`flex items-start ${msg.type === 'user' ? 'justify-end' : ''} max-w-[90%] ${msg.type === 'user' ? 'ml-auto' : ''}`}>
                  {msg.type === 'bot' && (
-                   <div className="w-10 h-10 rounded-full bg-mint flex-shrink-0 flex items-center justify-center mr-3 mt-1">
-                     <LeekIcon className="w-6 h-6 pb-1" />
-                   </div>
+                   <LeekIcon className="h-10 w-auto flex-shrink-0 mr-3 mt-1" />
                  )}
                  <div className={`p-5 rounded-2xl shadow-sm border ${
                    msg.type === 'user'
@@ -658,9 +684,7 @@ const ChatbotPage = ({ onNavigate }: { onNavigate: (path: string) => void }) => 
              {/* Bot Typing Simulation */}
              {isTyping && (
                <div className="flex items-start max-w-[80%]">
-                 <div className="w-10 h-10 rounded-full bg-mint flex-shrink-0 flex items-center justify-center mr-3 mt-1">
-                   <LeekIcon className="w-6 h-6 pb-1" />
-                 </div>
+                 <LeekIcon className="h-10 w-auto flex-shrink-0 mr-3 mt-1" />
                  <div className="bg-white p-4 rounded-2xl rounded-tl-none shadow-sm border border-gray-100 flex items-center gap-2">
                    <span className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></span>
                    <span className="w-2 h-2 bg-gray-400 rounded-full animate-bounce delay-100"></span>
@@ -932,13 +956,15 @@ const CreateDocPage = ({ targetId, docName, onNavigate, onGenerateSuccess }: { t
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                topic: topic,
-                goal: goal,
-                tone: tone,
-                docType: docName || category.docType,
-                userType: category.label,
-                selectedDatasets: selectedDatasets, // 선택된 데이터셋 포함
-                timestamp: new Date().toISOString()
+                data: {
+                    topic: topic,
+                    goal: goal,
+                    tone: tone,
+                    docType: docName || category.docType,
+                    userType: category.label,
+                    selectedDatasets: selectedDatasets, // 선택된 데이터셋 포함
+                    timestamp: new Date().toISOString()
+                }
             }),
             signal: controller.signal
         });
