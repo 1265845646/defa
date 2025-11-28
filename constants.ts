@@ -15,8 +15,8 @@ import {
   Target
 } from 'lucide-react';
 
-export const WEBHOOK_URL = "https://n8n.dpgtestbed.kr/webhook-test/07971f9d-3e2f-4004-bdef-11b6a6ce3588";
-export const CHATBOT_URL = "https://n8n.dpgtestbed.kr/webhook-test/07971f9d-3e2f-4004-bdef-11b6a6ce3588";
+export const WEBHOOK_URL = "https://n8n.dpgtestbed.kr/webhook/07971f9d-3e2f-4004-bdef-11b6a6ce3588";
+export const CHATBOT_URL = "https://n8n.dpgtestbed.kr/webhook/07971f9d-3e2f-4004-bdef-11b6a6ce3588";
 export const API_TIMEOUT = 60000;
 
 export interface GeneratedDocData {
@@ -24,11 +24,13 @@ export interface GeneratedDocData {
   sections: {
     heading: string;
     content: string;
+    bullets?: string[];
+    paragraphs?: string[];
   }[];
 }
 
 export const NAV_LINKS = [
-  { name: '서비스 소개', href: 'index.html#features' },
+  { name: '서비스 소개', href: 'index.html' },
   { name: '작동 방식', href: 'index.html#how-it-works' },
   { name: '추천 문서 포맷', href: 'index.html#solutions' },
 ];

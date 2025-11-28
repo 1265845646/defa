@@ -973,18 +973,37 @@ const CreateDocPage = ({ targetId, docName, onNavigate, onGenerateSuccess }: { t
 
       let parsed: GeneratedDocData;
 
-      // 🔥 1) n8n이 배열 형태로 sections만 주는 경우
+      // 🔥 1) n8n이 배열 형태로 sections만 주는 경우 (sections 객체 포함)
       if (Array.isArray(raw)) {
-        parsed = {
-          title: `${topic} 초안`,
-          sections: raw.map((sec) => ({
-            heading: sec.heading,
-            content: [
-              ...(sec.bullets || []),
-              ...(sec.paragraphs || [])
-            ].join('\n')
-          }))
-        };
+        // 배열의 첫 번째 요소가 sections를 포함하는 경우
+        if (raw.length > 0 && raw[0].sections && Array.isArray(raw[0].sections)) {
+          parsed = {
+            title: `${topic} 초안`,
+            sections: raw[0].sections.map((sec: any) => ({
+              heading: sec.heading,
+              bullets: sec.bullets || [],
+              paragraphs: sec.paragraphs || [],
+              content: [
+                ...(sec.bullets || []),
+                ...(sec.paragraphs || [])
+              ].join('\n')
+            }))
+          };
+        } else {
+          // 기존 로직 (sections가 배열 요소 자체인 경우)
+          parsed = {
+            title: `${topic} 초안`,
+            sections: raw.map((sec) => ({
+              heading: sec.heading,
+              bullets: sec.bullets || [],
+              paragraphs: sec.paragraphs || [],
+              content: [
+                ...(sec.bullets || []),
+                ...(sec.paragraphs || [])
+              ].join('\n')
+            }))
+          };
+        }
       }
       // 🔥 2) GPT처럼 {title, sections[]} 줬을 때 그대로 사용
       else if (raw.title && raw.sections) {
@@ -996,6 +1015,8 @@ const CreateDocPage = ({ targetId, docName, onNavigate, onGenerateSuccess }: { t
           title: topic,
           sections: [{
             heading: "본문",
+            bullets: [],
+            paragraphs: [],
             content: JSON.stringify(raw, null, 2)
           }]
         };
@@ -1233,11 +1254,38 @@ const ResultPage = ({ onNavigate, data }: { onNavigate: (path: string) => void, 
               </div>
 
               {content.sections.map((sec, idx) => (
-                <div key={idx} className="space-y-3">
-                  <h3 className="font-bold text-xl text-deep-navy">{sec.heading}</h3>
-                  <p className="text-gray-600 leading-8 text-justify whitespace-pre-wrap">
-                    {sec.content}
-                  </p>
+                <div key={idx} className="space-y-4">
+                  <h3 className="font-bold text-xl text-deep-navy border-b-2 border-mint/30 pb-2">{sec.heading}</h3>
+
+                  {/* Bullets 렌더링 */}
+                  {sec.bullets && sec.bullets.length > 0 && (
+                    <ul className="space-y-2 ml-1">
+                      {sec.bullets.map((bullet, bulletIdx) => (
+                        <li key={bulletIdx} className="flex items-start">
+                          <span className="text-mint mr-3 mt-1 flex-shrink-0">•</span>
+                          <span className="text-gray-700 leading-7">{bullet}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+
+                  {/* Paragraphs 렌더링 */}
+                  {sec.paragraphs && sec.paragraphs.length > 0 && (
+                    <div className="space-y-3">
+                      {sec.paragraphs.map((para, paraIdx) => (
+                        <p key={paraIdx} className="text-gray-600 leading-8 text-justify">
+                          {para}
+                        </p>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* bullets와 paragraphs가 없고 content만 있는 경우 (기존 로직 유지) */}
+                  {(!sec.bullets || sec.bullets.length === 0) && (!sec.paragraphs || sec.paragraphs.length === 0) && sec.content && (
+                    <p className="text-gray-600 leading-8 text-justify whitespace-pre-wrap">
+                      {sec.content}
+                    </p>
+                  )}
                 </div>
               ))}
 
