@@ -15,8 +15,8 @@ import {
   Target
 } from 'lucide-react';
 
-export const WEBHOOK_URL = "https://n8n.dpgtestbed.kr/webhook/07971f9d-3e2f-4004-bdef-11b6a6ce3588";
-export const CHATBOT_URL = "https://n8n.dpgtestbed.kr/webhook/07971f9d-3e2f-4004-bdef-11b6a6ce3588";
+export const WEBHOOK_URL = "https://n8n.dpgtestbed.kr/webhook-test/07971f9d-3e2f-4004-bdef-11b6a6ce3588";
+export const CHATBOT_URL = "https://n8n.dpgtestbed.kr/webhook-test/07971f9d-3e2f-4004-bdef-11b6a6ce3588";
 export const API_TIMEOUT = 60000;
 
 export interface GeneratedDocData {
