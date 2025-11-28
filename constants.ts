@@ -15,11 +15,9 @@ import {
   Target
 } from 'lucide-react';
 
-// n8n Backend Configuration
-// 문서 생성과 챗봇 모두 같은 엔드포인트 사용
-export const WEBHOOK_URL = import.meta.env.VITE_N8N_WEBHOOK_URL || "https://n8n.dpgtestbed.kr/webhook-test/1def621f-f09c-4cdf-b46a-cbe0b04c45c2";
-export const CHATBOT_URL = import.meta.env.VITE_N8N_CHATBOT_URL || "https://n8n.dpgtestbed.kr/webhook-test/1def621f-f09c-4cdf-b46a-cbe0b04c45c2";
-export const API_TIMEOUT = Number(import.meta.env.VITE_API_TIMEOUT) || 60000; // 60초로 증가
+export const WEBHOOK_URL = "https://n8n.dpgtestbed.kr/webhook-test/07971f9d-3e2f-4004-bdef-11b6a6ce3588";
+export const CHATBOT_URL = "https://n8n.dpgtestbed.kr/webhook-test/07971f9d-3e2f-4004-bdef-11b6a6ce3588";
+export const API_TIMEOUT = 60000;
 
 export interface GeneratedDocData {
   title: string;
@@ -78,14 +76,8 @@ export const DOCUMENT_CATEGORIES = [
     color: 'bg-mint',
     description: '혁신적인 아이디어를 투자자에게 설득력 있게 전달합니다.',
     docs: [
-      { name: '사업 기획서', desc: '체계적인 사업 준비를 위한 기초 문서' },
+      { name: '사업계획서', desc: '체계적인 사업 준비를 위한 기초 문서' },
       { name: '시장 분석 리포트', desc: '시장 규모 및 트렌드 데이터 분석' },
-      { name: '유사 서비스·경쟁사 분석', desc: '경쟁 우위 확보를 위한 심층 분석' },
-      { name: 'MVP 구현 전략서', desc: '핵심 기능 정의 및 검증 계획' },
-      { name: 'IR 피치덱 초안', desc: '투자 유치를 위한 핵심 설득 논리' },
-      { name: '고객 페르소나/고객 여정 맵', desc: '타겟 고객의 니즈와 행동 분석' },
-      { name: 'BM Canvas', desc: '비즈니스 모델의 9가지 핵심 요소' },
-      { name: '타깃 세그먼트/시장 규모 분석', desc: '구체적인 타겟 시장 정의 및 TAM/SAM/SOM' },
     ]
   },
   {
@@ -98,12 +90,8 @@ export const DOCUMENT_CATEGORIES = [
     color: 'bg-soft-yellow',
     description: '데이터에 기반한 정확하고 신뢰성 있는 정책을 수립합니다.',
     docs: [
-      { name: '지역문제 실태 보고서', desc: '데이터로 보는 지역 현안 분석' },
-      { name: '정책 제안서', desc: '해결 방안 및 기대 효과 제시' },
-      { name: '공공사업 기획안', desc: '사업 추진 배경 및 실행 계획' },
-      { name: '행정 예산 계획 초안', desc: '근거 기반 예산 산출 내역' },
-      { name: '사업 효과 분석', desc: '정량적/정성적 기대 효과' },
-      { name: '데이터 기반 지역 현황 리포트', desc: '통계로 보는 지역 변화 추이' },
+      { name: '정책 기획서', desc: '해결 방안 및 기대 효과 제시' },
+      { name: '성과/효과 분석 보고서', desc: '정량적/정성적 기대 효과' },
     ]
   },
   {
@@ -116,12 +104,8 @@ export const DOCUMENT_CATEGORIES = [
     color: 'bg-baby-blue',
     description: '방대한 데이터를 분석하여 명확한 연구 인사이트를 도출합니다.',
     docs: [
-      { name: '논문 배경 연구', desc: '선행 연구 및 이론적 배경 정리' },
-      { name: '연구 분석 보고서', desc: '실험/조사 데이터 상세 분석' },
-      { name: '데이터 기반 현황 조사', desc: '객관적 지표 중심의 현황 파악' },
-      { name: '학술 발표자료 PPT', desc: '연구 성과 시각화 및 요약' },
-      { name: '해커톤/캡스톤 프로젝트 제안서', desc: '창의적 문제 해결 프로젝트 기획' },
-      { name: 'SW/AI 서비스 설계서', desc: '알고리즘 및 시스템 구조 설계' },
+      { name: '데이터셋 기술서', desc: '데이터 구조, 출처, 활용 방법 정리' },
+      { name: '실험분석 보고서', desc: '실험/조사 데이터 상세 분석' },
     ]
   },
   {
@@ -134,28 +118,22 @@ export const DOCUMENT_CATEGORIES = [
     color: 'bg-mint',
     description: '내 가게 주변 상권과 매출 흐름을 한눈에 파악합니다.',
     docs: [
-      { name: '상권 분석 보고서', desc: '유동인구 및 배후 수요 분석' },
-      { name: '매출/소비 트렌드 분석', desc: '업종별/시기별 매출 추이' },
-      { name: '피해/위기 지원 신청용 근거 자료', desc: '지원사업 신청을 위한 증빙' },
-      { name: '마케팅/홍보 전략 기획서', desc: '타겟 맞춤형 홍보 실행안' },
-      { name: '매출 예측 개선안', desc: '데이터 기반 매출 증대 전략' },
+      { name: '수요·상권 분석 리포트', desc: '유동인구 및 배후 수요 분석' },
+      { name: '지역 소비패턴/고객군 분석', desc: '업종별/시기별 매출 추이 및 고객 특성' },
     ]
   },
   {
     id: 'pm',
-    label: '실무자 & PM',
-    role: '실무자 & PM',
+    label: 'PM & 기획자',
+    role: 'PM & 기획자',
     desc: '기획부터 결과 보고까지 빠르게',
     docType: '기획안 & 성과 보고서',
     icon: Briefcase,
     color: 'bg-soft-yellow',
     description: '기획부터 결과 보고까지, 실무 효율을 극대화합니다.',
     docs: [
-      { name: '상신 보고서', desc: '현황, 개선안, 근거 데이터를 포함한 보고' },
-      { name: '현황 파악 문서', desc: '프로젝트 및 이슈 현황 요약' },
-      { name: '프로젝트 진행계획서', desc: 'WBS 및 리소스 할당 계획' },
-      { name: '민원 대응 분석 자료', desc: '주요 민원 키워드 및 패턴 분석' },
-      { name: '예산 신청 근거 문서', desc: '비용 집행의 타당성 확보' },
+      { name: '기능 요구사항 정의서', desc: '시스템 기능 및 사용자 요구사항 명세' },
+      { name: '사용자 여정 + 데이터 결합 시나리오', desc: '사용자 경험과 데이터 활용 시나리오' },
     ]
   },
 ];
