@@ -1,6 +1,7 @@
+
 import React, { useState, useEffect, useRef } from 'react';
 import { Menu, X, ArrowRight, Search, CheckCircle2, FileText, Send, Bot, ArrowLeft, ChevronRight, PenTool, Upload, Database, Loader2, Download, Edit } from 'lucide-react';
-import { NAV_LINKS, HOW_IT_WORKS_STEPS, DATA_STATS, DOCUMENT_CATEGORIES, SAMPLE_RESULT_CONTENT } from './constants';
+import { NAV_LINKS, HOW_IT_WORKS_STEPS, DATA_STATS, DOCUMENT_CATEGORIES, SAMPLE_RESULT_CONTENT, WEBHOOK_URL, CHATBOT_URL, API_TIMEOUT, GeneratedDocData } from './constants';
 import BusanAnimation from './components/BusanAnimation';
 
 // --- Shared Components ---
@@ -407,27 +408,163 @@ const ChatbotPage = ({ onNavigate }: { onNavigate: (path: string) => void }) => 
     scrollToBottom();
   }, [messages, isTyping]);
 
-  const handleSend = () => {
+  const handleSend = async () => {
     if (!input.trim()) return;
-    
+
     const userMsg = input;
     setMessages(prev => [...prev, { type: 'user', text: userMsg }]);
     setInput('');
     setIsTyping(true);
 
-    // Simulate bot thinking and response
-    setTimeout(() => {
+    try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), API_TIMEOUT);
+
+      const response = await fetch(CHATBOT_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          topic: userMsg,
+          timestamp: new Date().toISOString()
+        }),
+        signal: controller.signal
+      });
+
+      clearTimeout(timeoutId);
+
+      if (!response.ok) {
+        throw new Error(`Server error: ${response.status}`);
+      }
+
+      const responseData = await response.json();
+      console.log('n8n 응답:', responseData);
+
+      // n8n 응답 구조 파싱
+      let botMessage = '';
+      let datasetsFound = false;
+
+      // 응답이 객체인지 배열인지 체크
+      let dataToProcess = responseData;
+
+      // 만약 배열이면 첫 번째 요소 사용
+      if (Array.isArray(responseData) && responseData.length > 0) {
+        dataToProcess = responseData[0];
+      }
+
+      // parsed 배열에서 데이터 추출
+      if (dataToProcess.parsed && Array.isArray(dataToProcess.parsed) && dataToProcess.parsed.length > 0) {
+        const parsedData = dataToProcess.parsed[0].body;
+
+        if (parsedData && parsedData.content) {
+          const content = parsedData.content;
+
+          // 문제 정의
+          if (content.문제정의) {
+            botMessage += `📊 **문제 정의**\n${content.문제정의}\n\n`;
+          }
+
+          // 핵심 키워드
+          if (content.핵심키워드 && Array.isArray(content.핵심키워드)) {
+            botMessage += `🔑 **핵심 키워드**\n${content.핵심키워드.join(', ')}\n\n`;
+          }
+
+          // 필요한 데이터셋 목록
+          if (content.필요한데이터셋 && Array.isArray(content.필요한데이터셋)) {
+            botMessage += `📁 **추천 데이터셋**\n\n`;
+            content.필요한데이터셋.forEach((dataset: any, idx: number) => {
+              botMessage += `${idx + 1}. **${dataset.데이터명}**\n`;
+              botMessage += `   - 내용: ${dataset.내용}\n`;
+              botMessage += `   - 출처: ${dataset.출처}\n\n`;
+            });
+            datasetsFound = true;
+          }
+        }
+      }
+
+      // body.content에서 실제 데이터셋 검색 결과 추출
+      if (dataToProcess.body && dataToProcess.body.content && Array.isArray(dataToProcess.body.content)) {
+        botMessage += `\n🔍 **검색된 실제 데이터셋** (총 ${dataToProcess.body.content.length}개 쿼리 결과)\n\n`;
+
+        // 중복 제거를 위한 Set
+        const displayedServices = new Set<string>();
+        let displayCount = 0;
+        const MAX_DISPLAY = 5; // 최대 5개만 표시
+
+        dataToProcess.body.content.forEach((queryResult: any) => {
+          if (queryResult.datasets && Array.isArray(queryResult.datasets) && displayCount < MAX_DISPLAY) {
+            queryResult.datasets.forEach((dataset: any) => {
+              if (dataset.contents && Array.isArray(dataset.contents) && displayCount < MAX_DISPLAY) {
+                dataset.contents.forEach((item: any) => {
+                  if (item.서비스명 && !displayedServices.has(item.서비스명) && displayCount < MAX_DISPLAY) {
+                    displayedServices.add(item.서비스명);
+                    displayCount++;
+
+                    botMessage += `✅ **${item.서비스명}**\n`;
+
+                    if (item.서비스설명) {
+                      // HTML 태그 제거
+                      const cleanDesc = item.서비스설명.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
+                      const shortDesc = cleanDesc.substring(0, 150);
+                      botMessage += `   ${shortDesc}${cleanDesc.length > 150 ? '...' : ''}\n`;
+                    }
+
+                    if (item.제공기관) {
+                      botMessage += `   📍 제공: ${item.제공기관}\n`;
+                    }
+
+                    if (item.조회수 || item.다운로드수) {
+                      botMessage += `   📊 `;
+                      if (item.조회수) botMessage += `조회수 ${item.조회수}`;
+                      if (item.조회수 && item.다운로드수) botMessage += ` | `;
+                      if (item.다운로드수) botMessage += `다운로드 ${item.다운로드수}`;
+                      botMessage += '\n';
+                    }
+
+                    botMessage += '\n';
+                  }
+                });
+              }
+            });
+          }
+        });
+
+        if (displayCount > 0) {
+          datasetsFound = true;
+        }
+      }
+
       setIsTyping(false);
-      setMessages(prev => [...prev, { 
-        type: 'bot', 
-        text: `"${userMsg}" 주제와 관련된 유용한 데이터셋을 찾았습니다!\n\n✅ 공공데이터포털: 지역별 유동인구 데이터\n✅ K-Data: 소비 트렌드 지수\n\n탐색된 데이터셋을 기반으로 적절한 문서 포맷을 선택해 주세요.` 
+
+      if (botMessage.trim()) {
+        setMessages((prev: any) => [...prev, {
+          type: 'bot',
+          text: botMessage + '\n📋 탐색된 데이터셋을 기반으로 적절한 문서 포맷을 선택해 주세요.'
+        }]);
+        setShowProceedBtn(datasetsFound);
+      } else {
+        throw new Error('응답 데이터 파싱 실패');
+      }
+
+    } catch (error) {
+      console.error("Chatbot error:", error);
+      setIsTyping(false);
+
+      // Fallback to simulated response on error
+      setMessages(prev => [...prev, {
+        type: 'bot',
+        text: `"${userMsg}" 주제와 관련된 유용한 데이터셋을 찾았습니다!\n\n✅ 공공데이터포털: 지역별 유동인구 데이터\n✅ K-Data: 소비 트렌드 지수\n\n탐색된 데이터셋을 기반으로 적절한 문서 포맷을 선택해 주세요.\n\n⚠️ (현재 백엔드 연결 오류로 샘플 응답을 표시하고 있습니다)\n\n오류 상세: ${error instanceof Error ? error.message : '알 수 없는 오류'}`
       }]);
       setShowProceedBtn(true);
-    }, 1500);
+    }
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter') handleSend();
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleSend();
+    }
   };
 
   return (
@@ -606,16 +743,78 @@ const DocumentListPage = ({ onNavigate }: { onNavigate: (path: string) => void }
   );
 };
 
-const CreateDocPage = ({ targetId, docName, onNavigate }: { targetId?: string, docName?: string, onNavigate: (path: string) => void }) => {
+const CreateDocPage = ({ targetId, docName, onNavigate, onGenerateSuccess }: { targetId?: string, docName?: string, onNavigate: (path: string) => void, onGenerateSuccess: (data: GeneratedDocData) => void }) => {
   const category = DOCUMENT_CATEGORIES.find(c => c.id === targetId) || DOCUMENT_CATEGORIES[0];
   const [isGenerating, setIsGenerating] = useState(false);
+  
+  // State for inputs
+  const [topic, setTopic] = useState('');
+  const [goal, setGoal] = useState('투자 유치용');
+  const [tone, setTone] = useState('전문적이고 신뢰감 있는');
 
-  const handleGenerate = () => {
+  const handleGenerate = async () => {
+    if (!topic.trim()) {
+        alert("문서 주제를 입력해주세요.");
+        return;
+    }
+
     setIsGenerating(true);
-    setTimeout(() => {
-        setIsGenerating(false);
+
+    try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), API_TIMEOUT);
+
+        const response = await fetch(WEBHOOK_URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                topic: topic,
+                goal: goal,
+                tone: tone,
+                docType: docName || category.docType,
+                userType: category.label,
+                timestamp: new Date().toISOString()
+            }),
+            signal: controller.signal
+        });
+
+        clearTimeout(timeoutId);
+
+        if (!response.ok) {
+            const errorData = await response.json().catch(() => ({}));
+            throw new Error(errorData.message || `Server error: ${response.status}`);
+        }
+
+        const data: GeneratedDocData = await response.json();
+
+        // Validate response structure
+        if (!data.title || !data.sections || !Array.isArray(data.sections)) {
+            throw new Error('Invalid response format from server');
+        }
+
+        // Pass the generated data to the parent (App) so ResultPage can use it
+        onGenerateSuccess(data);
         onNavigate('result_doc.html');
-    }, 2500);
+
+    } catch (error) {
+        console.error("Error generating document:", error);
+
+        if (error instanceof Error) {
+            if (error.name === 'AbortError') {
+                alert("요청 시간이 초과되었습니다.\n네트워크 연결을 확인하고 다시 시도해주세요.");
+            } else if (error.message.includes('Failed to fetch')) {
+                alert("서버에 연결할 수 없습니다.\n네트워크 연결과 n8n 서버 상태를 확인해주세요.");
+            } else {
+                alert(`문서 생성 중 오류가 발생했습니다:\n${error.message}`);
+            }
+        } else {
+            alert("알 수 없는 오류가 발생했습니다. 다시 시도해주세요.");
+        }
+    } finally {
+        setIsGenerating(false);
+    }
   };
 
   return (
@@ -696,6 +895,8 @@ const CreateDocPage = ({ targetId, docName, onNavigate }: { targetId?: string, d
                    <label className="block text-deep-navy font-bold text-lg mb-2">문서 주제 / 아이디어</label>
                    <input 
                      type="text" 
+                     value={topic}
+                     onChange={(e) => setTopic(e.target.value)}
                      className="w-full bg-gray-50 border-2 border-gray-200 rounded-xl p-4 focus:border-mint focus:ring-4 focus:ring-mint/10 outline-none transition-all font-medium text-lg"
                      placeholder="예: 반려동물 동반 여행 시장 분석 보고서"
                    />
@@ -704,7 +905,11 @@ const CreateDocPage = ({ targetId, docName, onNavigate }: { targetId?: string, d
                 <div className="grid md:grid-cols-2 gap-6">
                    <div>
                      <label className="block text-deep-navy font-bold text-lg mb-2">문서 작성 목표</label>
-                     <select className="w-full bg-gray-50 border-2 border-gray-200 rounded-xl p-4 focus:border-mint outline-none appearance-none font-medium">
+                     <select 
+                        value={goal}
+                        onChange={(e) => setGoal(e.target.value)}
+                        className="w-full bg-gray-50 border-2 border-gray-200 rounded-xl p-4 focus:border-mint outline-none appearance-none font-medium"
+                     >
                        <option>투자 유치용</option>
                        <option>내부 보고용</option>
                        <option>공모전/지원사업 제출용</option>
@@ -713,7 +918,11 @@ const CreateDocPage = ({ targetId, docName, onNavigate }: { targetId?: string, d
                    </div>
                    <div>
                      <label className="block text-deep-navy font-bold text-lg mb-2">문서 톤앤매너</label>
-                     <select className="w-full bg-gray-50 border-2 border-gray-200 rounded-xl p-4 focus:border-mint outline-none appearance-none font-medium">
+                     <select 
+                        value={tone}
+                        onChange={(e) => setTone(e.target.value)}
+                        className="w-full bg-gray-50 border-2 border-gray-200 rounded-xl p-4 focus:border-mint outline-none appearance-none font-medium"
+                     >
                        <option>전문적이고 신뢰감 있는</option>
                        <option>창의적이고 혁신적인</option>
                        <option>객관적이고 분석적인</option>
@@ -752,7 +961,11 @@ const CreateDocPage = ({ targetId, docName, onNavigate }: { targetId?: string, d
   );
 };
 
-const ResultPage = ({ onNavigate }: { onNavigate: (path: string) => void }) => {
+const ResultPage = ({ onNavigate, data }: { onNavigate: (path: string) => void, data?: GeneratedDocData }) => {
+  // If no data is passed (e.g. refreshed), fallback to sample
+  const content = data || SAMPLE_RESULT_CONTENT;
+  const isFallback = !data;
+
   return (
     <div className="min-h-screen pt-28 pb-12 bg-paper-white relative flex flex-col items-center">
        <div className="absolute top-0 w-full h-80 overflow-hidden pointer-events-none">
@@ -771,6 +984,7 @@ const ResultPage = ({ onNavigate }: { onNavigate: (path: string) => void }) => {
            </h1>
            <p className="text-xl text-gray-600">
              DEFA가 데이터에 기반하여 작성한 초안입니다.
+             {isFallback && <span className="block text-sm text-red-400 mt-1">(연결된 데이터가 없어 샘플을 표시합니다)</span>}
            </p>
         </div>
 
@@ -781,7 +995,7 @@ const ResultPage = ({ onNavigate }: { onNavigate: (path: string) => void }) => {
            <div className="hidden md:block w-64 bg-gray-50 border-r border-gray-100 p-6 overflow-y-auto">
               <h4 className="font-bold text-deep-navy mb-4 text-sm uppercase tracking-wide text-gray-400">목차</h4>
               <ul className="space-y-3 text-sm">
-                 {SAMPLE_RESULT_CONTENT.sections.map((sec, idx) => (
+                 {content.sections.map((sec, idx) => (
                     <li key={idx} className="text-gray-600 hover:text-mint cursor-pointer truncate">
                        {sec.heading}
                     </li>
@@ -793,14 +1007,14 @@ const ResultPage = ({ onNavigate }: { onNavigate: (path: string) => void }) => {
            <div className="flex-1 p-8 md:p-12 overflow-y-auto bg-white relative">
               <div className="max-w-3xl mx-auto space-y-8">
                  <div className="border-b-2 border-deep-navy pb-6 mb-8">
-                    <h2 className="font-display text-3xl text-deep-navy">{SAMPLE_RESULT_CONTENT.title}</h2>
-                    <p className="text-gray-400 mt-2">Generated by DEFA AI • 2024.05.20</p>
+                    <h2 className="font-display text-3xl text-deep-navy">{content.title}</h2>
+                    <p className="text-gray-400 mt-2">Generated by DEFA AI • {new Date().toLocaleDateString()}</p>
                  </div>
 
-                 {SAMPLE_RESULT_CONTENT.sections.map((sec, idx) => (
+                 {content.sections.map((sec, idx) => (
                     <div key={idx} className="space-y-3">
                        <h3 className="font-bold text-xl text-deep-navy">{sec.heading}</h3>
-                       <p className="text-gray-600 leading-8 text-justify">
+                       <p className="text-gray-600 leading-8 text-justify whitespace-pre-wrap">
                           {sec.content}
                        </p>
                     </div>
@@ -849,6 +1063,7 @@ const ResultPage = ({ onNavigate }: { onNavigate: (path: string) => void }) => {
 function App() {
   const [currentPath, setCurrentPath] = useState('index.html');
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [generatedResult, setGeneratedResult] = useState<GeneratedDocData | undefined>(undefined);
 
   // Helper to "navigate" and parse simple params
   const handleNavigate = (path: string) => {
@@ -883,10 +1098,15 @@ function App() {
     if (pathBase === 'create_doc.html') {
       const cat = urlParams.get('cat') || undefined;
       const doc = urlParams.get('doc') || undefined;
-      return <CreateDocPage targetId={cat} docName={doc} onNavigate={handleNavigate} />;
+      return <CreateDocPage 
+        targetId={cat} 
+        docName={doc} 
+        onNavigate={handleNavigate} 
+        onGenerateSuccess={(data) => setGeneratedResult(data)}
+      />;
     }
     if (pathBase === 'result_doc.html') {
-      return <ResultPage onNavigate={handleNavigate} />;
+      return <ResultPage onNavigate={handleNavigate} data={generatedResult} />;
     }
     return <MainPage onNavigate={handleNavigate} />;
   };

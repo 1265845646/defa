@@ -1,3 +1,4 @@
+
 import { 
   Rocket, 
   Building2, 
@@ -13,6 +14,20 @@ import {
   MapPin,
   Target
 } from 'lucide-react';
+
+// n8n Backend Configuration
+// 문서 생성과 챗봇 모두 같은 엔드포인트 사용
+export const WEBHOOK_URL = import.meta.env.VITE_N8N_WEBHOOK_URL || "https://n8n.dpgtestbed.kr/webhook-test/1def621f-f09c-4cdf-b46a-cbe0b04c45c2";
+export const CHATBOT_URL = import.meta.env.VITE_N8N_CHATBOT_URL || "https://n8n.dpgtestbed.kr/webhook-test/1def621f-f09c-4cdf-b46a-cbe0b04c45c2";
+export const API_TIMEOUT = Number(import.meta.env.VITE_API_TIMEOUT) || 60000; // 60초로 증가
+
+export interface GeneratedDocData {
+  title: string;
+  sections: {
+    heading: string;
+    content: string;
+  }[];
+}
 
 export const NAV_LINKS = [
   { name: '서비스 소개', href: 'index.html#features' },
@@ -145,7 +160,7 @@ export const DOCUMENT_CATEGORIES = [
   },
 ];
 
-export const SAMPLE_RESULT_CONTENT = {
+export const SAMPLE_RESULT_CONTENT: GeneratedDocData = {
   title: "반려동물 동반 여행 시장 분석 보고서",
   sections: [
     {
