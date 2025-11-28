@@ -7,12 +7,20 @@ import BusanAnimation from './components/BusanAnimation';
 // --- Shared Components ---
 
 const LeekIcon = ({ className }: { className?: string }) => (
-  <img
-    src="/logo.png"
-    alt="DEFA Logo"
-    className={className}
-  />
+  <div className="flex items-center gap-2">
+    <img
+      src="/logo.png"
+      alt="DEFA Logo"
+      className={className}
+    />
+
+    <div className="flex flex-col">
+      <span className="font-bold text-lg">Data Finder</span>
+      <span className="text-xs text-gray-500">AI AGENT</span>
+    </div>
+  </div>
 );
+
 
 const Navigation = ({ activePath, onNavigate, isMenuOpen, setIsMenuOpen }: any) => (
   <nav className="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-md border-b-4 border-mint/30 transition-all duration-300">
