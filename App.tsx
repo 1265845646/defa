@@ -482,36 +482,37 @@ const ChatbotPage = ({ onNavigate }: { onNavigate: (path: string) => void }) => 
 
     const firstItem = Array.isArray(responseData) ? responseData[0] : responseData;
 
+    const rawContent = firstItem?.["data.data.outputs.content"]; // 미매칭 또는 추천 JSON
+    const parsedBlock = firstItem?.parsed?.[0]?.body?.content; // 문제정의/핵심키워드/필요데이터셋
+    const contentBlock = firstItem?.body?.content; // 실제 검색된 데이터셋
+
     let botMessage = "";
     const datasets: DatasetCard[] = [];
 
     // ============================================================
-    // 1) 🔥 미매칭 탐지 — 최우선 검사
+    // 🔥 1) 최우선: 미매칭 메시지 검사
     // ============================================================
-    const rawContent = firstItem?.["data.data.outputs.content"];
     let mismatch = false;
     let mismatchMsg = "";
 
     if (rawContent) {
       try {
         const parsed = JSON.parse(rawContent);
+
         if (parsed["미매칭 안내"]) {
           mismatch = true;
           mismatchMsg = parsed["미매칭 안내"];
         }
       } catch {
-        if (typeof rawContent === "string" && rawContent.includes("죄송합니다")) {
+        if (rawContent.includes("죄송합니다")) {
           mismatch = true;
           mismatchMsg = rawContent;
         }
       }
     }
 
-    // ============================================================
-    // 2) 🔥 미매칭이면 즉시 종료 (데이터셋 파싱 금지)
-    // ============================================================
     if (mismatch) {
-      console.log("미매칭 탐지 → 데이터셋 파싱 중단");
+      console.log("미매칭 탐지됨 → 즉시 종료");
       setDatasets([]);
       setShowProceedBtn(false);
       setIsTyping(false);
@@ -520,72 +521,66 @@ const ChatbotPage = ({ onNavigate }: { onNavigate: (path: string) => void }) => 
     }
 
     // ============================================================
-    // 3) 문제 정의 / 키워드 / 필요한 데이터셋 (GPT 구조)
+    // 🔥 2) 매칭 성공: 문제 정의 / 키워드 추가 (챗봇 메시지 상단)
     // ============================================================
-    const parsedBlock = firstItem?.parsed?.[0]?.body?.content;
-
     if (parsedBlock) {
       if (parsedBlock.문제정의) {
         botMessage += `📊 **문제 정의**\n${parsedBlock.문제정의}\n\n`;
       }
+
       if (parsedBlock.핵심키워드) {
         botMessage += `🔑 **핵심 키워드**\n${parsedBlock.핵심키워드.join(", ")}\n\n`;
-      }
-
-      if (parsedBlock.필요한데이터셋) {
-        botMessage += `📁 **AI 추천 데이터셋**\n\n`;
-        parsedBlock.필요한데이터셋.forEach((d, i) => {
-          botMessage += `${i + 1}. **${d.데이터명}**\n - 내용: ${d.내용}\n - 출처: ${d.출처}\n\n`;
-        });
       }
     }
 
     // ============================================================
-    // 4) 실제 매칭된 데이터셋만 파싱
+    // 🔥 3) 실제 매칭된 데이터셋 파싱
     // ============================================================
-    const contentBlock = firstItem?.body?.content;
-
     if (contentBlock && Array.isArray(contentBlock)) {
-      botMessage += `\n🔍 **검색된 실제 데이터셋**\n\n`;
+      botMessage += `🔍 **검색된 실제 데이터셋**\n\n`;
 
-      const seen = new Set<string>();
+      const seen = new Set();
 
-      contentBlock.forEach(query => {
-        query?.datasets?.forEach(ds => {
+      contentBlock.forEach(queryBlock => {
+        queryBlock?.datasets?.forEach(ds => {
           ds?.contents?.forEach(item => {
             if (!item.서비스명 || seen.has(item.서비스명)) return;
             seen.add(item.서비스명);
 
-            const desc = (item["서비스 설명"] || "").replace(/<[^>]+>/g, " ").trim();
+            const cleanDesc = (item["서비스 설명"] || "")
+              .replace(/<[^>]+>/g, " ")
+              .trim();
 
             datasets.push({
               serviceName: item.서비스명,
-              description: desc,
+              description: cleanDesc,
               provider: item.분류 || "미제공",
               views: item.조회수,
               downloads: item.다운로드수,
             });
 
-            botMessage += `✅ **${item.서비스명}**\n${desc}\n\n`;
+            botMessage += `✅ **${item.서비스명}**\n${cleanDesc}\n\n`;
           });
         });
       });
     }
 
     // ============================================================
-    // 5) 데이터셋이 없다? → 미매칭으로 처리
+    // 🔥 4) 실제 매칭된 데이터셋이 없다 → 미매칭 취급
     // ============================================================
     if (datasets.length === 0) {
-      const fallback = rawContent || "❗ 관련 데이터셋을 찾을 수 없습니다.";
+      const fallbackMsg =
+        rawContent || "❗ 관련 데이터셋을 찾을 수 없습니다.";
+
       setDatasets([]);
       setShowProceedBtn(false);
       setIsTyping(false);
-      setMessages(prev => [...prev, { type: "bot", text: fallback }]);
+      setMessages(prev => [...prev, { type: "bot", text: fallbackMsg }]);
       return;
     }
 
     // ============================================================
-    // 6) 정상 매칭 — 오른쪽 패널 띄우기
+    // 🔥 5) 매칭 성공: 오른쪽 패널 표시 + 메세지 출력
     // ============================================================
     setDatasets(datasets);
     setShowProceedBtn(true);
@@ -597,7 +592,7 @@ const ChatbotPage = ({ onNavigate }: { onNavigate: (path: string) => void }) => 
         type: "bot",
         text:
           botMessage +
-          `\n\n📋 탐색된 데이터셋을 기반으로 적절한 문서 포맷을 선택해 주세요.`,
+          `\n📋 탐색된 데이터셋을 기반으로 적절한 문서 포맷을 선택해 주세요.`,
       },
     ]);
   } catch (err) {
@@ -609,6 +604,7 @@ const ChatbotPage = ({ onNavigate }: { onNavigate: (path: string) => void }) => 
     ]);
   }
 };
+
 
 
 
