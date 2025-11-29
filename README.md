@@ -102,11 +102,11 @@
 
 **Back**
 
-![KakaoTalk_20251128_212425366.png](KakaoTalk_20251128_212425366.png)
+![./images/image18.png](./images/image18.png)
 
-![KakaoTalk_20251128_212557524.png](KakaoTalk_20251128_212557524.png)
+![image19.png](./images/image19.png)
 
-![image.png](image.png)
+![image.png](./images/image.png)
 
 | 단계 | 구성 | 역할 |
 | --- | --- | --- |
@@ -221,23 +221,23 @@
 
 1. 메인페이지
 
-![image.png](image%201.png)
+![image.png](./images/image1.png)
 
-![화면 캡처 2025-11-28 232944.png](%ED%99%94%EB%A9%B4_%EC%BA%A1%EC%B2%98_2025-11-28_232944.png)
+![화면 캡처 2025-11-28 232944.png](./images/image2.png)
 
-![image.png](image%202.png)
+![image.png](i./images/image3.png)
 
-![image.png](image%203.png)
+![image.png](./images/image4.png)
 
 1. 챗봇 페이지
 
 2-1. 기본 UI
 
-![image.png](image%204.png)
+![image.png](./images/image5.png)
 
 2-2. 데이터셋 추천
 
-![image.png](image%205.png)
+![image.png](./images/image6.png)
 
 오른쪽에서 추천 데이터셋을 선택하여 선택한 내용으로 문서 초안 작성 페이지로 이동
 
