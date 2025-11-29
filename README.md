@@ -245,21 +245,21 @@
 
 1. 초안 문서 포맷 선택
 
-![image.png](image%206.png)
+![image.png](./images/image7.png)
 
 1. 초안작성을 위한 기본정보 작성 및 선택
 
-![image.png](image%207.png)
+![image.png](./images/image8.png)
 
-![image.png](image%208.png)
+![image.png](./images/image9.png)
 
 1. 문서 초안 페이지
 
-![image.png](image%209.png)
+![image.png](./images/image10.png)
 
-![image.png](image%2010.png)
+![image.png](./images/image11.png)
 
-![image.png](image%2011.png)
+![image.png](./images/image12.png)
 
 추가 편집 요청 및 PDF/TXT 로 다운로드 가능
 
@@ -277,16 +277,19 @@
 
 ### 트래픽 사용량
 
-![image.png](image%2012.png)
+![image.png](./images/image13.png)
 
-![image.png](image%2013.png)
+![image.png](./images/image14.png)
 
-![image.png](image%2014.png)
+![image.png](./images/image15.png)
 
 ### 구글폼 만족도 설문조사
 
-![image.png](image%2015.png)
+![image.png](./images/image16.png)
 
-![image.png](image%2016.png)
+![image.png](./images/image17.png)
 
-![image.png](image%2017.png)
+
+
+### 시연영상
+![image.png](./images/video.mp4)
